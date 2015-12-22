@@ -1,0 +1,15 @@
+language: c
+compiler:
+  - clang
+  - gcc
+
+dist: bionic
+
+addons:
+  apt:
+    packages:
+      - libfuse-dev fuse
+
+script:
+  - mkdir build && cd build && cmake ..
+  - make -j

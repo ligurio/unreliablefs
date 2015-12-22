@@ -1,0 +1,87 @@
+.\" Copyright (c) 2020 Sergey Bronnikov
+.\"
+.Dd $Mdocdate: November 03 2020 $
+.Dt UNRELIABLEFS 1
+.Os
+.Sh NAME
+.Nm unreliablefs
+.Nd a FUSE-based fault-injecting filesystem
+.Sh SYNOPSIS
+.Nm
+mountpoint
+.Op Fl h
+.Sh DESCRIPTION
+The
+.Nm
+is a filesystem that allows to inject errors on file operations.
+It works as pass-through filesystem and redirects file operations to a file
+objects on real filesystem.
+.Pp
+.Nm
+uses Filesystem in Userspace (FUSE) that allows easy setup without requiring a
+kernel recompile or new kernel modules.
+Without any other configuration, any files in a mounted directory will be
+available unchanged.
+To mount filesystem it is required to specify mountpoint and after mount it
+will contain the same file tree as a root filesystem.
+.Pp
+Supported file operations are:
+.Xr access 2 ,
+.Xr chmod 2 ,
+.Xr chown 2 ,
+.Xr creat 2 ,
+.Xr fallocate 2 ,
+.Xr flock 2 ,
+.Xr fsync 2 ,
+.Xr ftruncate 2 ,
+.Xr getxattr 2 ,
+.Xr ioctl 2 ,
+.Xr link 2 ,
+.Xr listxattr 2 ,
+.Xr lock 2 ,
+.Xr lstat 2 ,
+.Xr mkdir 2 ,
+.Xr mknod 2 ,
+.Xr open 2 ,
+.Xr read 2 ,
+.Xr readdir 2 ,
+.Xr readlink 2 ,
+.Xr removexattr 2 ,
+.Xr rename 2 ,
+.Xr rmdir 2 ,
+.Xr setxattr 2 ,
+.Xr statfs 2 ,
+.Xr symlink 2 ,
+.Xr truncate 2 ,
+.Xr unlink 2 ,
+.Xr write 2 .
+.Sh EXIT STATUS
+.Ex -std
+.Sh EXAMPLES
+.Bd -literal
+
+$ mkdir /tmp/unreliable
+$ unreliablefs /tmp/unreliable
+$ umount /tmp/unreliable
+
+.Ed
+.Sh SEE ALSO
+.Xr fusermount 1 ,
+.Xr errno 2 ,
+.Xr fuse 4 ,
+.Xr re_format 7 ,
+.Xr mount.fuse 8
+.Sh AUTHORS
+.An -nosplit
+The
+.Nm
+utility was written by
+.An Sergey
+.An Bronnikov .
+.Sh CAVEATS
+Faults can be injected before a start of a file operation, and cannot be
+injected say in a middle of file operation.
+So if a file operation has been successfully started then
+.Nm
+will not affect it and final result entirely depends on a base filesystem and
+application that started file operation.
