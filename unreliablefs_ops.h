@@ -1,6 +1,8 @@
 #ifndef UNRELIABLEFS_OPS_HH
 #define UNRELIABLEFS_OPS_HH
 
+#define FUSE_USE_VERSION 29
+
 #include <fuse.h>
 
 int unreliable_getattr(const char *, struct stat *);
@@ -24,7 +26,7 @@ int unreliable_statfs(const char *, struct statvfs *);
 int unreliable_flush(const char *, struct fuse_file_info *);
 int unreliable_release(const char *, struct fuse_file_info *);
 int unreliable_fsync(const char *, int, struct fuse_file_info *);
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__)
 int unreliable_setxattr(const char *, const char *, const char *, size_t, int);
 int unreliable_getxattr(const char *, const char *, char *, size_t);
 int unreliable_listxattr(const char *, char *, size_t);
@@ -46,7 +48,7 @@ int unreliable_ftruncate(const char *, off_t, struct fuse_file_info *);
 int unreliable_fgetattr(const char *, struct stat *, struct fuse_file_info *);
 int unreliable_lock(const char *, struct fuse_file_info *, int cmd,
                  struct flock *);
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_ioctl(const char *, int cmd, void *arg,
                   struct fuse_file_info *, unsigned int flags, void *data);
 #endif /* __OpenBSD__ */
@@ -54,7 +56,7 @@ int unreliable_write_buf(const char *, struct fuse_bufvec *buf, off_t off,
                       struct fuse_file_info *);
 int unreliable_read_buf(const char *, struct fuse_bufvec **bufp,
                      size_t size, off_t off, struct fuse_file_info *);
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_flock(const char *, struct fuse_file_info *, int op);
 int unreliable_fallocate(const char *, int, off_t, off_t,
                       struct fuse_file_info *);
