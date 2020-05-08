@@ -3,11 +3,12 @@ freebsd_task:
   freebsd_instance:
     image: freebsd-12-1-release-amd64
   install_script:
-    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs
+    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf
     - kldload fuse
     - kldstat
   test_script:
     - cmake -S . -B build
+    - cmake --build build
 
 macos_catalina_task:
   name: macOS Catalina
@@ -18,6 +19,7 @@ macos_catalina_task:
     - brew install cmake
   test_script:
     - cmake -S . -B build
+    - cmake --build build
 
 macos_bigsur_task:
   name: macOS Big Sur
@@ -30,3 +32,4 @@ macos_bigsur_task:
     - brew install cmake
   test_script:
     - cmake -S . -B build
+    - cmake --build build

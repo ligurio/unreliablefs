@@ -119,6 +119,7 @@ if(FUSE_FOUND)
     set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES}" "${FUSE_LIBRARIES}")
     set(CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS}" "${FUSE_DEFINITIONS}")
     check_c_source_compiles("#include <stdlib.h>
+#define FUSE_USE_VERSION 29
 #include <fuse.h>
 #include <stdio.h>
 #include <string.h>

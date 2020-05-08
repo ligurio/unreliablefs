@@ -29,7 +29,7 @@ static struct fuse_operations unreliable_ops = {
     .flush       = unreliable_flush,
     .release     = unreliable_release,
     .fsync       = unreliable_fsync,
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
     .setxattr    = unreliable_setxattr,
     .getxattr    = unreliable_getxattr,
     .listxattr   = unreliable_listxattr,
@@ -48,7 +48,7 @@ static struct fuse_operations unreliable_ops = {
     .ftruncate   = unreliable_ftruncate,
     .fgetattr    = unreliable_fgetattr,
     .lock        = unreliable_lock,
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
     .ioctl       = unreliable_ioctl,
     .flock       = unreliable_flock,
     .fallocate   = unreliable_fallocate,

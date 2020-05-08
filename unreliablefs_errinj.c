@@ -1,7 +1,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 #define MAX_ERR EXFULL
 #else
 #define MAX_ERR ELAST

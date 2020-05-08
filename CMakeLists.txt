@@ -12,6 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -D_FILE_OFFSET_BITS=64")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 find_package(FUSE 2.9 REQUIRED)
 
-include_directories(${FUSE_INCLUDE_DIR})
+add_definitions(${FUSE_DEFINITIONS})
 add_executable(${PROJECT_NAME} ${UNRELIABLEFS_SRC})
+target_include_directories(${PROJECT_NAME} PRIVATE ${FUSE_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${FUSE_LIBRARIES})

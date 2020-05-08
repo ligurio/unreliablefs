@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 #include <sys/xattr.h>
 #endif /* __OpenBSD__ */
 
@@ -330,7 +330,7 @@ int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
     return 0;
 }
 
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_setxattr(const char *path, const char *name,
                      const char *value, size_t size, int flags)
 {
@@ -348,7 +348,7 @@ int unreliable_setxattr(const char *path, const char *name,
 }
 #endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_getxattr(const char *path, const char *name,
                      char *value, size_t size)
 {
@@ -366,7 +366,7 @@ int unreliable_getxattr(const char *path, const char *name,
 }
 #endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_listxattr(const char *path, char *list,
                       size_t size)
 {
@@ -384,7 +384,7 @@ int unreliable_listxattr(const char *path, char *list,
 }
 #endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_removexattr(const char *path, const char *name)
 {
     int ret = error_inject(path, "removexattr");
@@ -614,7 +614,7 @@ int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
 }
 #endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_fallocate(const char *path, int mode,
                       off_t offset, off_t len,
                       struct fuse_file_info *fi)
