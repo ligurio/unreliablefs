@@ -1,0 +1,20 @@
+freebsd_task:
+  name: FreeBSD 12.1
+  freebsd_instance:
+    image: freebsd-12-1-release-amd64
+  install_script:
+    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs
+    - kldload fuse
+    - kldstat
+  test_script:
+    - cmake -S . -B build
+
+macos_task:
+  name: macOS Mojave
+  osx_instance:
+    image: mojave-base
+  install_script:
+    - brew cask install osxfuse
+    - brew install cmake
+  test_script:
+    - cmake -S . -B build
