@@ -55,8 +55,8 @@ set(FUSE_INCLUDE_DIRS )
 
 find_package(PkgConfig)
 
-set(PC_FUSE_INCLUDE_DIRS )
-set(PC_FUSE_LIBRARY_DIRS )
+set(PC_FUSE_INCLUDE_DIRS /opt /opt/local /usr/local /usr/local/include /usr/pkg)
+set(PC_FUSE_LIBRARY_DIRS /usr/local/lib /opt/local/lib)
 if(PKG_CONFIG_FOUND)
     pkg_check_modules(PC_FUSE "fuse" QUIET)
     if(PC_FUSE_FOUND)
@@ -71,6 +71,14 @@ if(PKG_CONFIG_FOUND)
     endif(PC_FUSE_FOUND)
 endif(PKG_CONFIG_FOUND)
 
+if (APPLE)
+    set (FUSE_NAMES libosxfuse.dylib fuse)
+    set (FUSE_SUFFIXES osxfuse fuse)
+else ()
+    set (FUSE_NAMES fuse refuse)
+    set (FUSE_SUFFIXES fuse refuse)
+endif ()
+
 find_path(
     FUSE_INCLUDE_DIRS
     NAMES fuse_common.h fuse_lowlevel.h fuse.h
@@ -84,7 +92,7 @@ endif(NOT FUSE_INCLUDE_DIRS)
 
 find_library(
     FUSE_LIBRARIES
-    NAMES "fuse"
+    NAMES ${FUSE_NAMES}
     PATHS "${PC_FUSE_LIBRARY_DIRS}"
     DOC "Libraries for FUSE"
 )
