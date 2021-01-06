@@ -380,7 +380,7 @@ int unreliable_listxattr(const char *path, char *list,
         return -errno;
     }
     
-    return ret;
+    return 0;
 }
 #endif /* __OpenBSD__ */
 
