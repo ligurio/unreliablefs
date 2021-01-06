@@ -1,7 +1,11 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#if !defined(__OpenBSD__)
 #define MAX_ERR EXFULL
+#else
+#define MAX_ERR ELAST
+#endif /* __OpenBSD__ */
 #define MIN_ERR E2BIG
 
 #define PROBABILITY 5
