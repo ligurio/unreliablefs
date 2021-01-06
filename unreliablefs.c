@@ -29,10 +29,12 @@ static struct fuse_operations unreliable_ops = {
     .flush       = unreliable_flush,
     .release     = unreliable_release,
     .fsync       = unreliable_fsync,
+#if !defined(__OpenBSD__)
     .setxattr    = unreliable_setxattr,
     .getxattr    = unreliable_getxattr,
     .listxattr   = unreliable_listxattr,
     .removexattr = unreliable_removexattr,
+#endif /* __OpenBSD__ */
     .opendir     = unreliable_opendir,
     .readdir     = unreliable_readdir,
     .releasedir  = unreliable_releasedir,
@@ -46,9 +48,11 @@ static struct fuse_operations unreliable_ops = {
     .ftruncate   = unreliable_ftruncate,
     .fgetattr    = unreliable_fgetattr,
     .lock        = unreliable_lock,
+#if !defined(__OpenBSD__)
     .ioctl       = unreliable_ioctl,
     .flock       = unreliable_flock,
     .fallocate   = unreliable_fallocate,
+#endif /* __OpenBSD__ */
 };
 
 int main(int argc, char *argv[])
