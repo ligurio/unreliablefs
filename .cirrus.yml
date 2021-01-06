@@ -14,7 +14,7 @@ macos_task:
   osx_instance:
     image: mojave-base
   install_script:
-    - brew cask install osxfuse
+    - brew install --cask osxfuse
     - brew install cmake
   test_script:
     - cmake -S . -B build
