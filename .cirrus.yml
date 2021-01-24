@@ -9,11 +9,23 @@ freebsd_task:
   test_script:
     - cmake -S . -B build
 
-macos_task:
-  name: macOS Mojave
+macos_catalina_task:
+  name: macOS Catalina
   osx_instance:
-    image: mojave-base
+    image: catalina-base
   install_script:
+    - brew install --cask osxfuse
+    - brew install cmake
+  test_script:
+    - cmake -S . -B build
+
+macos_bigsur_task:
+  name: macOS Big Sur
+  osx_instance:
+    image: big-sur-base
+  install_script:
+    - brew update-reset
+    - brew upgrade
     - brew install --cask osxfuse
     - brew install cmake
   test_script:
