@@ -28,3 +28,5 @@ add_custom_command(TARGET check-mandoc
                    COMMAND mandoc -T lint -W warning,stop ${MANUAL_PAGES}
                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                    COMMENT "Run mandoc static analysis")
+
+include(${PROJECT_SOURCE_DIR}/cmake/CPack.cmake)
