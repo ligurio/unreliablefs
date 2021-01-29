@@ -8,8 +8,9 @@ dist: bionic
 addons:
   apt:
     packages:
-      - libfuse-dev fuse
+      - libfuse-dev fuse mandoc
 
 script:
   - mkdir build && cd build && cmake ..
   - make -j
+  - make check
