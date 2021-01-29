@@ -1,28 +1,55 @@
-freebsd_task:
-  name: FreeBSD 12.1
-  freebsd_instance:
-    image: freebsd-12-1-release-amd64
-  install_script:
-    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf
-    - kldload fuse
-    - kldstat
-  test_script:
-    - cmake -S . -B build
-    - cmake --build build
+ubuntu_1804: &ubuntu_1804
+  container:
+    image: ubuntu:bionic
+  env:
+    UBUNTU_CODENAME: bionic
 
-macos_catalina_task:
-  name: macOS Catalina
+ubuntu_1804_gcc: &ubuntu_1804_gcc
+  <<: *ubuntu_1804
+  env:
+    CC: gcc-9
+  bootstrap_script:
+    - apt-get update
+    - apt-get install -y gnupg2 ca-certificates wget curl
+    - |
+      cat << EOF > /etc/apt/sources.list.d/ubuntu-toolchain-r.list
+      deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu ${UBUNTU_CODENAME} main
+      deb-src http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu ${UBUNTU_CODENAME} main
+      EOF
+    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
+    - apt-get update
+  install_script:
+    - apt-get install -y cmake gcc-9 g++-9 libc-dev build-essential fuse libfuse-dev
+
+ubuntu_1804_clang: &ubuntu_1804_clang
+  <<: *ubuntu_1804
+  env:
+    CC: clang-10
+    CLANG_VERSION: 10
+  bootstrap_script:
+    - apt-get update
+    - apt-get install -y gnupg2 ca-certificates wget curl
+    - |
+      cat << EOF > /etc/apt/sources.list.d/llvm-toolchain.list
+      deb https://apt.llvm.org/${UBUNTU_CODENAME} llvm-toolchain-${UBUNTU_CODENAME}-${CLANG_VERSION} main
+      deb-src https://apt.llvm.org/${UBUNTU_CODENAME} llvm-toolchain-${UBUNTU_CODENAME}-${CLANG_VERSION} main
+      EOF
+    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 15CF4D18AF4F7421
+    - apt-get update
+  install_script:
+    - apt-get install -y cmake clang-${CLANG_VERSION} libc-dev build-essential fuse libfuse-dev
+    - update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${CLANG_VERSION} 10
+
+macos_1015: &macos_1015
   osx_instance:
     image: catalina-base
+  env:
+    CC: clang
   install_script:
     - brew install --cask osxfuse
     - brew install cmake
-  test_script:
-    - cmake -S . -B build
-    - cmake --build build
 
-macos_bigsur_task:
-  name: macOS Big Sur
+macos_1101: &macos_1101
   osx_instance:
     image: big-sur-base
   install_script:
@@ -30,6 +57,30 @@ macos_bigsur_task:
     - brew upgrade
     - brew install --cask osxfuse
     - brew install cmake
-  test_script:
-    - cmake -S . -B build
-    - cmake --build build
+
+freebsd_12_1: &freebsd_12_1
+  freebsd_instance:
+    image: freebsd-12-1-release-amd64
+  env:
+    CC: clang
+  install_script:
+    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf
+    - kldload fuse
+    - kldstat
+
+task:
+  matrix:
+    - name: "Build and test on Ubuntu 18.04 LTS with GCC 9"
+      <<: *ubuntu_1804_gcc
+    - name: "Build and test on Ubuntu 18.04 LTS with Clang 10"
+      <<: *ubuntu_1804_clang
+    - name: "Build and test on FreeBSD 12.1"
+      <<: *freebsd_12_1
+    - name: "Build and test on macOS 10.15 (Catalina)"
+      <<: *macos_1015
+    - name: "Build and test on macOS 11.0.1 (Big Sur)"
+      <<: *macos_1101
+
+  build_script:
+    - mkdir build && cd build && cmake ..
+    - make
