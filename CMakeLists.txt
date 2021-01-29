@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.12.4)
+cmake_minimum_required (VERSION 3.10.2)
 project (unreliablefs
          DESCRIPTION "A FUSE-based fault injection filesystem.")
 

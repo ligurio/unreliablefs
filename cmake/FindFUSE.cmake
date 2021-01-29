@@ -1,7 +1,7 @@
 # This module can find FUSE Library
 #
 # Requirements:
-# - CMake >= 3.12.4
+# - CMake >= 3.10.2
 #
 # The following variables will be defined for your use:
 # - FUSE_FOUND : was FUSE found?
@@ -38,7 +38,7 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #=============================================================================
 
-cmake_minimum_required(VERSION 3.12.4)
+cmake_minimum_required(VERSION 3.10.2)
 
 ########## Private ##########
 function(fusedebug _varname)
