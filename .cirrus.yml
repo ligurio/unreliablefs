@@ -82,5 +82,5 @@ task:
       <<: *macos_1101
 
   build_script:
-    - mkdir build && cd build && cmake ..
+    - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
     - make
