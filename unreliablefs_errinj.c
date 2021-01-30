@@ -17,6 +17,7 @@ static int rand_range(int min_n, int max_n)
 
 int error_inject(const char* path, char* operation)
 {
+#if defined(DEBUG)
     int err_no = 0;
     int p = rand_range(0, 100);
     if ((p >= 0) && (p <= PROBABILITY)) {
@@ -24,4 +25,7 @@ int error_inject(const char* path, char* operation)
     }
 
     return -err_no;
+#else
+    return 0;
+#endif /* DEBUG */
 }
