@@ -20,10 +20,7 @@ $ cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j
 ### Using
 
 ```sh
-$ mkdir /tmp/unreliable
-$ unreliablefs /tmp/unreliable
-$ echo "UnreliableFS" > /tmp/example/tmp/info
-$ cat /tmp/info 
-UnreliableFS
+$ ./build/unreliablefs ~/Downloads/mnt/ -omodules=subdir,subdir=/tmp
+$ ls ~/Downloads/mnt/
 $ umount /tmp/unreliable
 ```
