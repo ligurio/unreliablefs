@@ -60,9 +60,9 @@ macos_1101: &macos_1101
     - brew install cmake python3
     - sudo python3 -m pip install pytest
 
-freebsd_12_1: &freebsd_12_1
+freebsd_12_2: &freebsd_12_2
   freebsd_instance:
-    image: freebsd-12-1-release-amd64
+    image: freebsd-12-2-release-amd64
   env:
     CC: clang
   install_script:
@@ -77,8 +77,8 @@ task:
       <<: *ubuntu_1804_gcc
     - name: "Build and test on Ubuntu 18.04 LTS with Clang 10"
       <<: *ubuntu_1804_clang
-    - name: "Build and test on FreeBSD 12.1"
-      <<: *freebsd_12_1
+    - name: "Build and test on FreeBSD 12.2"
+      <<: *freebsd_12_2
     - name: "Build and test on macOS 10.15 (Catalina)"
       <<: *macos_1015
     - name: "Build and test on macOS 11.0.1 (Big Sur)"
