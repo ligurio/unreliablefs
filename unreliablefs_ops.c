@@ -24,7 +24,7 @@ int unreliable_lstat(const char *path, struct stat *buf)
     }
 
     memset(buf, 0, sizeof(struct stat));
-    if (lstat(path, buf) < 0) {
+    if (lstat(path, buf) == -1) {
         return -errno;
     } else {
         return 0;
@@ -41,7 +41,7 @@ int unreliable_getattr(const char *path, struct stat *buf)
     }
 
     memset(buf, 0, sizeof(struct stat));
-    if (stat(path, buf) < 0) {
+    if (stat(path, buf) == -1) {
         return -errno;
     } else {
         return 0;
@@ -58,10 +58,11 @@ int unreliable_readlink(const char *path, char *buf, size_t bufsiz)
     }
 
     ret = readlink(path, buf, bufsiz);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     buf[ret] = 0;
+
     return 0;
 }
 
@@ -73,7 +74,7 @@ int unreliable_mknod(const char *path, mode_t mode, dev_t dev)
     }
 
     ret = mknod(path, mode, dev);    
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -88,7 +89,7 @@ int unreliable_mkdir(const char *path, mode_t mode)
     }
 
     ret = mkdir(path, mode);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -103,7 +104,7 @@ int unreliable_unlink(const char *path)
     }
 
     ret = unlink(path); 
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -118,7 +119,7 @@ int unreliable_rmdir(const char *path)
     }
 
     ret = rmdir(path); 
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -133,7 +134,7 @@ int unreliable_symlink(const char *target, const char *linkpath)
     }
 
     ret = symlink(target, linkpath);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -148,7 +149,7 @@ int unreliable_rename(const char *oldpath, const char *newpath)
     }
 
     ret = rename(oldpath, newpath);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -193,7 +194,7 @@ int unreliable_chown(const char *path, uid_t owner, gid_t group)
     }
 
     ret = chown(path, owner, group);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -208,7 +209,7 @@ int unreliable_truncate(const char *path, off_t length)
     }
 
     ret = truncate(path, length); 
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -223,7 +224,7 @@ int unreliable_open(const char *path, struct fuse_file_info *fi)
     }
 
     ret = open(path, fi->flags);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     fi->fh = ret;
@@ -271,7 +272,7 @@ int unreliable_statfs(const char *path, struct statvfs *buf)
     }
 
     ret = statvfs(path, buf);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -286,7 +287,7 @@ int unreliable_flush(const char *path, struct fuse_file_info *fi)
     }
 
     ret = close(dup(fi->fh));
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -301,7 +302,7 @@ int unreliable_release(const char *path, struct fuse_file_info *fi)
     }
 
     ret = close(fi->fh);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -317,12 +318,12 @@ int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 
     if (datasync) {
         ret = fdatasync(fi->fh);
-        if (ret < 0) {
+        if (ret == -1) {
             return -errno;
         }
     } else {
         ret = fsync(fi->fh);
-        if (ret < 0) {
+        if (ret == -1) {
             return -errno;
         }
     }
@@ -340,7 +341,7 @@ int unreliable_setxattr(const char *path, const char *name,
     }
 
     ret = setxattr(path, name, value, size, flags);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -358,7 +359,7 @@ int unreliable_getxattr(const char *path, const char *name,
     }
 
     ret = getxattr(path, name, value, size);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -376,7 +377,7 @@ int unreliable_listxattr(const char *path, char *list,
     }
 
     ret = listxattr(path, list, size);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -393,7 +394,7 @@ int unreliable_removexattr(const char *path, const char *name)
     }
 
     ret = removexattr(path, name);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -454,7 +455,7 @@ int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
     DIR *dir = (DIR *) fi->fh;
 
     ret = closedir(dir);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -475,12 +476,12 @@ int unreliable_fsyncdir(const char *path, int datasync, struct fuse_file_info *f
 
     if (datasync) {
         ret = fdatasync(dirfd(dir));
-        if (ret < 0) {
+        if (ret == -1) {
             return -errno;
         }
     } else {
         ret = fsync(dirfd(dir));
-        if (ret < 0) {
+        if (ret == -1) {
             return -errno;
         }
     }
@@ -507,7 +508,7 @@ int unreliable_access(const char *path, int mode)
     }
 
     ret = access(path, mode); 
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -523,7 +524,7 @@ int unreliable_create(const char *path, mode_t mode,
     }
 
     ret = creat(path, mode);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     fi->fh = ret;
@@ -540,7 +541,7 @@ int unreliable_ftruncate(const char *path, off_t length,
     }
 
     ret = truncate(path, length);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -555,7 +556,7 @@ int unreliable_fgetattr(const char *path, struct stat *buf, struct fuse_file_inf
     }
 
     ret = fstat((int) fi->fh, buf);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -571,7 +572,7 @@ int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
     }
 
     ret = fcntl((int) fi->fh, cmd, fl);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
 
@@ -589,7 +590,7 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
     }
 
     ret = ioctl(fi->fh, cmd, arg);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -606,7 +607,7 @@ int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
     }
 
     ret = flock(((int) fi->fh), op);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
@@ -625,7 +626,7 @@ int unreliable_fallocate(const char *path, int mode,
     }
 
     ret = fallocate((int) fi->fh, mode, offset, len);
-    if (ret < 0) {
+    if (ret == -1) {
         return -errno;
     }
     
