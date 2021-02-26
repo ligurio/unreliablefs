@@ -240,9 +240,25 @@ int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
         return ret;
     }
 
-    ret = pread(fi->fh, buf, size, offset);
+    int fd;
+
+    if (fi == NULL) {
+	fd = open(path, O_RDONLY);
+    } else {
+	fd = fi->fh;
+    }
+
+    if (fd == -1) {
+	return -errno;
+    }
+
+    ret = pread(fd, buf, size, offset);
     if (ret == -1) {
         ret = -errno;
+    }
+
+    if (fi == NULL) {
+	close(fd);
     }
 
     return ret;
