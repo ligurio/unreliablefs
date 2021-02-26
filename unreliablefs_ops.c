@@ -657,9 +657,30 @@ int unreliable_fallocate(const char *path, int mode,
         return ret;
     }
 
+    int fd;
+    (void) fi;
+
+    if (mode) {
+	return -EOPNOTSUPP;
+    }
+
+    if(fi == NULL) {
+	fd = open(path, O_WRONLY);
+    } else {
+	fd = fi->fh;
+    }
+
+    if (fd == -1) {
+	return -errno;
+    }
+
     ret = fallocate((int) fi->fh, mode, offset, len);
     if (ret == -1) {
         return -errno;
+    }
+
+    if(fi == NULL) {
+	close(fd);
     }
     
     return 0;    
