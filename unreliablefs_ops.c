@@ -256,9 +256,25 @@ int unreliable_write(const char *path, const char *buf, size_t size,
         return ret;
     }
 
-    ret = pwrite(fi->fh, buf, size, offset);
+    int fd;
+    (void) fi;
+    if(fi == NULL) {
+	fd = open(path, O_WRONLY);
+    } else {
+	fd = fi->fh;
+    }
+
+    if (fd == -1) {
+	return -errno;
+    }
+
+    ret = pwrite(fd, buf, size, offset);
     if (ret == -1) {
         ret = -errno;
+    }
+
+    if(fi == NULL) {
+        close(fd);
     }
 
     return ret;
