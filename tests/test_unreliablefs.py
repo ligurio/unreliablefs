@@ -115,7 +115,6 @@ def test_symlink(setup_unreliablefs):
     assert fstat.st_nlink == 1
     assert linkname in os.listdir(mnt_dir)
 
-@pytest.mark.xfail(sys.platform == "freebsd12", reason="gh-45")
 def test_create(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
@@ -344,7 +343,6 @@ def test_truncate_fd(setup_unreliablefs):
         fh.seek(0)
         assert fh.read(size) == TEST_DATA[:size-1024]
 
-@pytest.mark.xfail(sys.platform == "freebsd12", reason="gh-43")
 def test_passthrough(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
