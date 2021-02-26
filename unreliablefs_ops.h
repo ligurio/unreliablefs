@@ -62,4 +62,8 @@ int unreliable_fallocate(const char *, int, off_t, off_t,
                       struct fuse_file_info *);
 #endif /* __OpenBSD__ */
 
+#ifdef HAVE_UTIMENSAT
+int unreliable_utimens(const char *path, const struct timespec ts[2]);
+#endif
+
 #endif /* UNRELIABLEFS_OPS_HH */

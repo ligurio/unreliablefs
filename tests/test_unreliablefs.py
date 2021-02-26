@@ -514,3 +514,36 @@ def test_flock(setup_unreliablefs):
     with open(mnt_name, 'w') as fh:
         fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
         fcntl.flock(fh, fcntl.LOCK_UN)
+
+@pytest.mark.parametrize("symlink", (False, True))
+def test_utimens(setup_unreliablefs, symlink):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(mnt_dir, name)
+    os_create(mnt_name)
+    linkname = name_generator()
+    link_path = os.path.join(mnt_dir, linkname)
+    os.symlink(mnt_name, link_path)
+    if symlink:
+        target = link_path
+    else:
+        target = mnt_name
+
+    fstat = os.lstat(link_path)
+    link_atime = fstat.st_atime
+    link_mtime = fstat.st_mtime
+
+    fstat = os.lstat(mnt_name)
+    mnt_name_atime = fstat.st_atime + 10
+    mnt_name_mtime = fstat.st_mtime + 10
+    os.utime(target, (mnt_name_atime, mnt_name_mtime))
+
+    fstat = os.lstat(mnt_name)
+    assert fstat.st_atime == mnt_name_atime
+    assert fstat.st_mtime == mnt_name_mtime
+
+    if symlink:
+        fstat = os.lstat(link_path)
+        assert fstat.st_atime == link_atime
+        assert fstat.st_mtime == link_mtime

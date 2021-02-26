@@ -13,6 +13,11 @@
 #include <sys/xattr.h>
 #endif /* __OpenBSD__ */
 
+#ifdef linux
+/* For pread()/pwrite()/utimensat() */
+#define _XOPEN_SOURCE 700
+#endif
+
 #include "unreliablefs_errinj.h"
 #include "unreliablefs_ops.h"
 
@@ -686,3 +691,21 @@ int unreliable_fallocate(const char *path, int mode,
     return 0;    
 }
 #endif /* __OpenBSD__ */
+
+#ifdef HAVE_UTIMENSAT
+int unreliable_utimens(const char *path, const struct timespec ts[2])
+{
+    int ret = error_inject(path, "utimens");
+    if (ret) {
+        return ret;
+    }
+
+    /* don't use utime/utimes since they follow symlinks */
+    ret = utimensat(0, path, ts, AT_SYMLINK_NOFOLLOW);
+    if (ret == -1) {
+        return -errno;
+    }
+
+    return 0;
+}
+#endif
