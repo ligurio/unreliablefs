@@ -3,11 +3,14 @@
 import subprocess
 import pytest
 import os
+import sys
 import stat
 import time
 from os.path import join as pjoin
 
 basename = pjoin(os.path.dirname(__file__), '..')
+
+platforms_wo_fusermount = ['freebsd12', 'darwin']
 
 def wait_for_mount(mount_process, mnt_dir,
                    test_fn=os.path.ismount):
@@ -22,9 +25,14 @@ def wait_for_mount(mount_process, mnt_dir,
     pytest.fail("mountpoint failed to come up")
 
 def cleanup(mount_process, mnt_dir):
-    subprocess.call(['umount', mnt_dir],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.STDOUT)
+    if sys.platform in platforms_wo_fusermount:
+        subprocess.call(['umount', mnt_dir],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.STDOUT)
+    else:
+        subprocess.call(['fusermount', '-u', '-z', mnt_dir],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.STDOUT)
     mount_process.terminate()
     try:
         mount_process.wait(1)
@@ -32,7 +40,10 @@ def cleanup(mount_process, mnt_dir):
         mount_process.kill()
 
 def umount(mount_process, mnt_dir):
-    subprocess.check_call(['umount', mnt_dir])
+    if sys.platform in platforms_wo_fusermount:
+        subprocess.check_call(['umount', mnt_dir])
+    else:
+        subprocess.check_call(['fusermount', '-u', '-z', mnt_dir])
     assert not os.path.ismount(mnt_dir)
 
     # Give mount process a little while to terminate. Popen.wait(timeout)
@@ -72,21 +83,22 @@ def fuse_test_marker():
 
     skip = lambda x: pytest.mark.skip(reason=x)
 
-    which = subprocess.Popen(['which', 'fusermount'], stdout=subprocess.PIPE, universal_newlines=True)
-    fusermount_path = which.communicate()[0].strip()
+    if sys.platform not in platforms_wo_fusermount:
+        which = subprocess.Popen(['which', 'fusermount'], stdout=subprocess.PIPE, universal_newlines=True)
+        fusermount_path = which.communicate()[0].strip()
 
-    if not fusermount_path or which.returncode != 0:
-        return skip("Can't find fusermount executable")
+        if not fusermount_path or which.returncode != 0:
+            return skip("Can't find fusermount executable")
+
+        mode = os.stat(fusermount_path).st_mode
+        if mode & stat.S_ISUID == 0:
+            return skip('fusermount executable not setuid, and we are not root.')
 
     if not os.path.exists('/dev/fuse'):
         return skip("FUSE kernel module does not seem to be loaded")
 
     if os.getuid() == 0:
         return pytest.mark.uses_fuse()
-
-    mode = os.stat(fusermount_path).st_mode
-    if mode & stat.S_ISUID == 0:
-        return skip('fusermount executable not setuid, and we are not root.')
 
     try:
         fd = os.open('/dev/fuse', os.O_RDWR)
