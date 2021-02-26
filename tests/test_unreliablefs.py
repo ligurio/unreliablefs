@@ -5,6 +5,7 @@ if __name__ == '__main__':
     import sys
     sys.exit(pytest.main([__file__] + sys.argv[1:]))
 
+import binascii
 import subprocess
 import os
 import sys
@@ -223,6 +224,18 @@ def test_open_unlink(setup_unreliablefs):
         fh.write(data2)
         fh.seek(0)
         assert fh.read() == data1+data2
+
+def test_open_gh_14(setup_unreliablefs):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = pjoin(mnt_dir, name_generator())
+    fullname = pjoin(mnt_dir, name)
+
+    with open(fullname, "w+") as fh:
+        hs = "123456789ABCDEF1"
+        hb = binascii.a2b_hex(hs)
+        fh.write(str(hb))
+        fh.seek(0)
+        fh.read()
 
 def test_statvfs(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
