@@ -26,11 +26,9 @@ int unreliable_lstat(const char *path, struct stat *buf)
     memset(buf, 0, sizeof(struct stat));
     if (lstat(path, buf) == -1) {
         return -errno;
-    } else {
-        return 0;
     }
 
-    return -ENOENT;
+    return 0;
 }
 
 int unreliable_getattr(const char *path, struct stat *buf)
@@ -43,11 +41,9 @@ int unreliable_getattr(const char *path, struct stat *buf)
     memset(buf, 0, sizeof(struct stat));
     if (lstat(path, buf) == -1) {
         return -errno;
-    } else {
-        return 0;
     }
 
-    return -ENOENT;
+    return 0;
 }
 
 int unreliable_readlink(const char *path, char *buf, size_t bufsiz)
