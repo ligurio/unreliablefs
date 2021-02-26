@@ -293,6 +293,31 @@ def test_readdir(setup_unreliablefs):
     os.rmdir(subdir)
     os.rmdir(src_newdir)
 
+def test_readdir_big(setup_unreliablefs):
+    mnt_dir, src_dir = setup_unreliablefs
+
+    # Add enough entries so that readdir needs to be called
+    # multiple times.
+    fnames = []
+    for i in range(500):
+        fname  = ('A rather long filename to make sure that we '
+                  'fill up the buffer - ' * 3) + str(i)
+        with open(pjoin(src_dir, fname), 'w') as fh:
+            fh.write('File %d' % i)
+        fnames.append(fname)
+
+    listdir_is = sorted(os.listdir(mnt_dir))
+    listdir_should = sorted(os.listdir(src_dir))
+    assert listdir_is == listdir_should
+
+    for fname in fnames:
+        stat_src = os.stat(pjoin(src_dir, fname))
+        stat_mnt = os.stat(pjoin(mnt_dir, fname))
+        assert stat_src.st_mtime == stat_mnt.st_mtime
+        assert stat_src.st_ctime == stat_mnt.st_ctime
+        assert stat_src.st_size == stat_mnt.st_size
+        os.unlink(pjoin(src_dir, fname))
+
 def test_truncate_path(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     assert len(TEST_DATA) > 1024
