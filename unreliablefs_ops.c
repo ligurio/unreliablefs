@@ -408,7 +408,7 @@ int unreliable_listxattr(const char *path, char *list, size_t size)
         return -errno;
     }
     
-    return 0;
+    return ret;
 }
 #endif /* __OpenBSD__ */
 
