@@ -233,7 +233,7 @@ int unreliable_open(const char *path, struct fuse_file_info *fi)
 }
 
 int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
-                 struct fuse_file_info *fi)
+                    struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "read");
     if (ret) {
@@ -248,8 +248,8 @@ int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
     return ret;
 }
 
-int unreliable_write(const char *path, const char *buf, size_t size, off_t offset,
-                  struct fuse_file_info *fi)
+int unreliable_write(const char *path, const char *buf, size_t size,
+                     off_t offset, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "write");
     if (ret) {
@@ -333,7 +333,7 @@ int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_setxattr(const char *path, const char *name,
-                     const char *value, size_t size, int flags)
+                        const char *value, size_t size, int flags)
 {
     int ret = error_inject(path, "setxattr");
     if (ret) {
@@ -351,7 +351,7 @@ int unreliable_setxattr(const char *path, const char *name,
 
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_getxattr(const char *path, const char *name,
-                     char *value, size_t size)
+                        char *value, size_t size)
 {
     int ret = error_inject(path, "getxattr");
     if (ret) {
@@ -368,8 +368,7 @@ int unreliable_getxattr(const char *path, const char *name,
 #endif /* __OpenBSD__ */
 
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
-int unreliable_listxattr(const char *path, char *list,
-                      size_t size)
+int unreliable_listxattr(const char *path, char *list, size_t size)
 {
     int ret = error_inject(path, "listxattr");
     if (ret) {
@@ -420,7 +419,7 @@ int unreliable_opendir(const char *path, struct fuse_file_info *fi)
 }
 
 int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-                    off_t offset, struct fuse_file_info *fi)
+                       off_t offset, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "readdir");
     if (ret) {
@@ -516,7 +515,7 @@ int unreliable_access(const char *path, int mode)
 }
 
 int unreliable_create(const char *path, mode_t mode,
-                   struct fuse_file_info *fi)
+                      struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "create");
     if (ret) {
@@ -533,7 +532,7 @@ int unreliable_create(const char *path, mode_t mode,
 }
 
 int unreliable_ftruncate(const char *path, off_t length,
-                      struct fuse_file_info *fi)
+                         struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "ftruncate");
     if (ret) {
@@ -548,7 +547,8 @@ int unreliable_ftruncate(const char *path, off_t length,
     return 0;    
 }
 
-int unreliable_fgetattr(const char *path, struct stat *buf, struct fuse_file_info *fi)
+int unreliable_fgetattr(const char *path, struct stat *buf,
+                        struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "fgetattr");
     if (ret) {
@@ -564,7 +564,7 @@ int unreliable_fgetattr(const char *path, struct stat *buf, struct fuse_file_inf
 }
 
 int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
-                 struct flock *fl)
+                    struct flock *fl)
 {
     int ret = error_inject(path, "lock");
     if (ret) {
@@ -581,8 +581,8 @@ int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
 
 #if !defined(__OpenBSD__)
 int unreliable_ioctl(const char *path, int cmd, void *arg,
-                  struct fuse_file_info *fi,
-                  unsigned int flags, void *data)
+                     struct fuse_file_info *fi,
+                     unsigned int flags, void *data)
 {
     int ret = error_inject(path, "ioctl");
     if (ret) {
@@ -617,8 +617,8 @@ int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
 
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_fallocate(const char *path, int mode,
-                      off_t offset, off_t len,
-                      struct fuse_file_info *fi)
+                         off_t offset, off_t len,
+                         struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "fallocate");
     if (ret) {
