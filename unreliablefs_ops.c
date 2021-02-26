@@ -459,6 +459,9 @@ int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     }
 
     DIR *dp = (DIR *) fi->fh;
+    if (dp == NULL) {
+	return -errno;
+    }
     struct dirent *de;
 
     (void) offset;
