@@ -458,7 +458,7 @@ int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
         return ret;
     }
 
-    DIR *dp = (DIR *) fi->fh;
+    DIR *dp = opendir(path);
     if (dp == NULL) {
 	return -errno;
     }
@@ -475,8 +475,9 @@ int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
         if (filler(buf, de->d_name, &st, 0))
             break;
     }
-    
-    return 0;    
+    closedir(dp);
+
+    return 0;
 }
 
 int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
