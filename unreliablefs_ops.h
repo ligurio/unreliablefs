@@ -19,9 +19,9 @@ int unreliable_chown(const char *, uid_t, gid_t);
 int unreliable_truncate(const char *, off_t);
 int unreliable_open(const char *, struct fuse_file_info *);
 int unreliable_read(const char *, char *, size_t, off_t,
-                 struct fuse_file_info *);
+                    struct fuse_file_info *);
 int unreliable_write(const char *, const char *, size_t, off_t,
-                  struct fuse_file_info *);
+                     struct fuse_file_info *);
 int unreliable_statfs(const char *, struct statvfs *);
 int unreliable_flush(const char *, struct fuse_file_info *);
 int unreliable_release(const char *, struct fuse_file_info *);
