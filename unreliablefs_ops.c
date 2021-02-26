@@ -626,7 +626,7 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
         return -errno;
     }
     
-    return 0;    
+    return ret;
 }
 #endif /* __OpenBSD__ */
 
