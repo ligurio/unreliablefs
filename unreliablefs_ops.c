@@ -554,7 +554,7 @@ int unreliable_create(const char *path, mode_t mode,
         return ret;
     }
 
-    ret = creat(path, mode);
+    ret = open(path, fi->flags, mode);
     if (ret == -1) {
         return -errno;
     }

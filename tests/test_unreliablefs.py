@@ -208,7 +208,6 @@ def test_seek(setup_unreliablefs):
     with open(fullname, 'rb') as fh:
         assert fh.read() == b'\0foocom\n'
 
-@pytest.mark.xfail(reason="gh-40")
 def test_open_unlink(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     name = pjoin(mnt_dir, name_generator())
@@ -310,7 +309,6 @@ def test_truncate_path(setup_unreliablefs):
 
     os.unlink(filename)
 
-@pytest.mark.xfail(reason="gh-38")
 def test_truncate_fd(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     assert len(TEST_DATA) > 1024
