@@ -41,7 +41,7 @@ int unreliable_getattr(const char *path, struct stat *buf)
     }
 
     memset(buf, 0, sizeof(struct stat));
-    if (stat(path, buf) == -1) {
+    if (lstat(path, buf) == -1) {
         return -errno;
     } else {
         return 0;

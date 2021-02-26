@@ -96,7 +96,6 @@ def test_rmdir(setup_unreliablefs):
     assert name not in os.listdir(mnt_dir)
     assert name not in os.listdir(src_dir)
 
-@pytest.mark.xfail(reason="gh-37")
 def test_symlink(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     linkname = name_generator()
