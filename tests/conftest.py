@@ -89,3 +89,8 @@ def pytest_runtest_call(item):
     capfd = current_capfd
     if capfd is not None:
         check_test_output(capfd)
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "uses_fuse: mark test to run only with FUSE subsystem"
+    )
