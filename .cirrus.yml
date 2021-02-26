@@ -89,4 +89,4 @@ task:
     - make
 
   test_script:
-    - pytest --junit-xml=report.xml tests/
+    - pytest --verbose --junit-xml=report.xml tests/
