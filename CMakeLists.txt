@@ -1,4 +1,7 @@
 cmake_minimum_required (VERSION 3.10.2)
+
+include(CheckFunctionExists)
+
 project (unreliablefs
          DESCRIPTION "A FUSE-based fault injection filesystem.")
 
@@ -16,6 +19,11 @@ add_definitions(${FUSE_DEFINITIONS})
 add_executable(${PROJECT_NAME} ${UNRELIABLEFS_SRC})
 target_include_directories(${PROJECT_NAME} PRIVATE ${FUSE_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${FUSE_LIBRARIES})
+
+check_function_exists(utimensat HAVE_UTIMENSAT)
+if (${HAVE_UTIMENSAT})
+    target_compile_definitions(${PROJECT_NAME} PUBLIC HAVE_UTIMENSAT)
+endif ()
 
 enable_testing()
 add_test(NAME pytest COMMAND pytest -c ${PROJECT_SOURCE_DIR}/tests/pytest.ini ${PROJECT_SOURCE_DIR}/tests/

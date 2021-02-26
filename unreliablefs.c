@@ -53,6 +53,9 @@ static struct fuse_operations unreliable_ops = {
     .flock       = unreliable_flock,
     .fallocate   = unreliable_fallocate,
 #endif /* __OpenBSD__ */
+#ifdef HAVE_UTIMENSAT
+    .utimens     = unreliable_utimens,
+#endif
 };
 
 int main(int argc, char *argv[])
