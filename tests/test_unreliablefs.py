@@ -20,6 +20,8 @@ from util import (wait_for_mount, umount, cleanup, base_cmdline,
                   basename, fuse_test_marker, safe_sleep)
 from os.path import join as pjoin
 
+OS_WO_XATTR_SUPPORT = ['openbsd', 'freebsd12']
+
 TEST_FILE = __file__
 
 pytestmark = fuse_test_marker()
@@ -391,3 +393,112 @@ def test_passthrough(setup_unreliablefs):
     assert name in os.listdir(src_dir)
     assert name in os.listdir(mnt_dir)
     assert os.stat(src_name) == os.stat(mnt_name)
+
+@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.parametrize("symlink", (False, True))
+def test_listxattr(setup_unreliablefs, symlink):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(src_dir, name)
+    os_create(mnt_name)
+    linkname = name_generator()
+    link_path = os.path.join(mnt_dir, linkname)
+    os.symlink(mnt_dir, link_path)
+    if symlink:
+        target = link_path
+    else:
+        target = mnt_name
+
+    attr1_name = b"user.aa"
+    attr1_value = b"a"
+    attr2_name = b"user.bb"
+    attr2_value = b"b"
+
+    num_attrs = len(os.listxattr(target))
+    os.setxattr(target, attr1_name, attr1_value)
+    assert attr1_name.decode("utf-8") in os.listxattr(target)
+    os.setxattr(target, attr2_name, attr2_value)
+    assert attr2_name.decode("utf-8") in os.listxattr(target)
+    assert num_attrs + 2 == len(os.listxattr(target))
+
+@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.parametrize("symlink",
+    (False,
+     pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
+    ))
+def test_getxattr(setup_unreliablefs, symlink):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(src_dir, name)
+    os_create(mnt_name)
+    linkname = name_generator()
+    link_path = os.path.join(mnt_dir, linkname)
+    os.symlink(mnt_dir, link_path)
+    if symlink:
+        target = link_path
+    else:
+        target = mnt_name
+
+    attr_value = b"unreliablefs"
+    attr_name = b"user.fsname"
+
+    os.setxattr(target, attr_name, attr_value)
+    assert attr_name.decode("utf-8") in os.listxattr(target)
+    assert os.getxattr(target, attr_name) == attr_value
+    os.setxattr(target, attr_name, b"hello")
+    assert os.getxattr(target, attr_name) == b"hello"
+
+@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.parametrize("symlink", (False, True))
+def test_setxattr(setup_unreliablefs, symlink):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(src_dir, name)
+    os_create(mnt_name)
+    linkname = name_generator()
+    link_path = os.path.join(mnt_dir, linkname)
+    os.symlink(mnt_dir, link_path)
+    if symlink:
+        target = link_path
+    else:
+        target = mnt_name
+
+    attr_value = b"unreliablefs"
+    attr_name = b"user.fsname"
+
+    os.setxattr(target, attr_name, attr_value)
+    assert attr_name.decode("utf-8") in os.listxattr(target)
+
+@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.parametrize("symlink",
+    (False,
+     pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
+    ))
+def test_removexattr(setup_unreliablefs, symlink):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(src_dir, name)
+    os_create(mnt_name)
+    linkname = name_generator()
+    link_path = os.path.join(mnt_dir, linkname)
+    os.symlink(mnt_dir, link_path)
+    if symlink:
+        target = link_path
+    else:
+        target = mnt_name
+
+    attr_value = b"unreliablefs"
+    attr_name = b"user.fsname"
+
+    os.setxattr(target, attr_name, attr_value)
+    assert attr_name.decode("utf-8") in os.listxattr(target)
+    assert os.getxattr(target, attr_name) == attr_value
+    os.removexattr(target, attr_name)
+    try:
+        assert os.getxattr(target, attr_name) == None
+    except OSError:
+        pass
