@@ -6,6 +6,7 @@ if __name__ == '__main__':
     sys.exit(pytest.main([__file__] + sys.argv[1:]))
 
 import binascii
+import fcntl
 import subprocess
 import os
 import sys
@@ -502,3 +503,14 @@ def test_removexattr(setup_unreliablefs, symlink):
         assert os.getxattr(target, attr_name) == None
     except OSError:
         pass
+
+def test_flock(setup_unreliablefs):
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(src_dir, name)
+    os_create(mnt_name)
+
+    with open(mnt_name, 'w') as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        fcntl.flock(fh, fcntl.LOCK_UN)
