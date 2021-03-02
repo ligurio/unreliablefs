@@ -475,14 +475,14 @@ def test_setxattr(setup_unreliablefs, symlink):
 
 @pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
 @pytest.mark.parametrize("symlink",
-    (False,
-     pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
+    (pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
+     pytest.param(False, marks=pytest.mark.xfail(reason="gh-50")),
     ))
 def test_removexattr(setup_unreliablefs, symlink):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
     src_name = pjoin(src_dir, name)
-    mnt_name = pjoin(src_dir, name)
+    mnt_name = pjoin(mnt_dir, name)
     os_create(mnt_name)
     linkname = name_generator()
     link_path = os.path.join(mnt_dir, linkname)
