@@ -9,9 +9,9 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
+#ifdef HAVE_XATTR
 #include <sys/xattr.h>
-#endif /* __OpenBSD__ */
+#endif /* HAVE_XATTR */
 
 #ifdef linux
 /* For pread()/pwrite()/utimensat() */
@@ -364,7 +364,7 @@ int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
     return 0;
 }
 
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
+#ifdef HAVE_XATTR
 int unreliable_setxattr(const char *path, const char *name,
                         const char *value, size_t size, int flags)
 {
@@ -373,16 +373,18 @@ int unreliable_setxattr(const char *path, const char *name,
         return ret;
     }
 
+#ifdef __APPLE__
+    ret = setxattr(path, name, value, size, 0, flags);
+#else
     ret = setxattr(path, name, value, size, flags);
+#endif /* __APPLE__ */
     if (ret == -1) {
         return -errno;
     }
 
     return 0;
 }
-#endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_getxattr(const char *path, const char *name,
                         char *value, size_t size)
 {
@@ -391,16 +393,18 @@ int unreliable_getxattr(const char *path, const char *name,
         return ret;
     }
 
+#ifdef __APPLE__
+    ret = getxattr(path, name, value, size, 0, XATTR_NOFOLLOW);
+#else
     ret = getxattr(path, name, value, size);
+#endif /* __APPLE__ */
     if (ret == -1) {
         return -errno;
     }
     
     return 0;
 }
-#endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_listxattr(const char *path, char *list, size_t size)
 {
     int ret = error_inject(path, "listxattr");
@@ -408,16 +412,18 @@ int unreliable_listxattr(const char *path, char *list, size_t size)
         return ret;
     }
 
+#ifdef __APPLE__
+    ret = listxattr(path, list, size, XATTR_NOFOLLOW);
+#else
     ret = listxattr(path, list, size);
+#endif /* __APPLE__ */
     if (ret == -1) {
         return -errno;
     }
     
     return ret;
 }
-#endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
 int unreliable_removexattr(const char *path, const char *name)
 {
     int ret = error_inject(path, "removexattr");
@@ -425,14 +431,18 @@ int unreliable_removexattr(const char *path, const char *name)
         return ret;
     }
 
+#ifdef __APPLE__
+    ret = removexattr(path, name, XATTR_NOFOLLOW);
+#else
     ret = removexattr(path, name);
+#endif /* __APPLE__ */
     if (ret == -1) {
         return -errno;
     }
     
     return 0;    
 }
-#endif /* __OpenBSD__ */
+#endif /* HAVE_XATTR */
 
 int unreliable_opendir(const char *path, struct fuse_file_info *fi)
 {
@@ -616,7 +626,6 @@ int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
     return 0;
 }
 
-#if !defined(__OpenBSD__)
 int unreliable_ioctl(const char *path, int cmd, void *arg,
                      struct fuse_file_info *fi,
                      unsigned int flags, void *data)
@@ -633,9 +642,8 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
     
     return ret;
 }
-#endif /* __OpenBSD__ */
 
-#if !defined(__OpenBSD__)
+#ifdef HAVE_FLOCK
 int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
 {
     int ret = error_inject(path, "flock");
@@ -650,9 +658,9 @@ int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
     
     return 0;    
 }
-#endif /* __OpenBSD__ */
+#endif /* HAVE_FLOCK */
 
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
+#ifdef HAVE_FALLOCATE
 int unreliable_fallocate(const char *path, int mode,
                          off_t offset, off_t len,
                          struct fuse_file_info *fi)
@@ -690,7 +698,7 @@ int unreliable_fallocate(const char *path, int mode,
     
     return 0;    
 }
-#endif /* __OpenBSD__ */
+#endif /* HAVE_FALLOCATE */
 
 #ifdef HAVE_UTIMENSAT
 int unreliable_utimens(const char *path, const struct timespec ts[2])
@@ -708,4 +716,4 @@ int unreliable_utimens(const char *path, const struct timespec ts[2])
 
     return 0;
 }
-#endif
+#endif /* HAVE_UTIMENSAT */

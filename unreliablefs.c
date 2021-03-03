@@ -48,14 +48,16 @@ static struct fuse_operations unreliable_ops = {
     .ftruncate   = unreliable_ftruncate,
     .fgetattr    = unreliable_fgetattr,
     .lock        = unreliable_lock,
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
     .ioctl       = unreliable_ioctl,
+#ifdef HAVE_FLOCK
     .flock       = unreliable_flock,
+#endif /* HAVE_FLOCK */
+#ifdef HAVE_FALLOCATE
     .fallocate   = unreliable_fallocate,
-#endif /* __OpenBSD__ */
+#endif /* HAVE_FALLOCATE */
 #ifdef HAVE_UTIMENSAT
     .utimens     = unreliable_utimens,
-#endif
+#endif /* HAVE_UTIMENSAT */
 };
 
 int main(int argc, char *argv[])
