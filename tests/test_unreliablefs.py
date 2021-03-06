@@ -563,3 +563,18 @@ def test_fsx(setup_unreliablefs):
     os_create(mnt_name)
     cmd_line = '{} -N 10000 -d -W -c 4 {}'.format(fsx_bin, mnt_name)
     subprocess.check_call(cmd_line.split(' '))
+
+@pytest.mark.long
+def test_fio(setup_unreliablefs):
+    if not shutil.which('fio'):
+        pytest.skip('fio is required to execute testcase')
+
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(mnt_dir, name)
+    os_create(mnt_name)
+    cmd_line = "fio --name=random-write --ioengine=sync --rw=randwrite " \
+                "--bs=1m --size=1G --numjobs=1 --iodepth=1 --runtime=60 " \
+                "--time_based --end_fsync=1 --filename={}".format(mnt_name)
+    subprocess.check_call(cmd_line.split(' '))
