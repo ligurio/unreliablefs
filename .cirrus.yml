@@ -19,7 +19,7 @@ ubuntu_1804_gcc: &ubuntu_1804_gcc
     - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
     - apt-get update
   install_script:
-    - apt-get install -y cmake gcc-9 g++-9 libc-dev build-essential fuse libfuse-dev mandoc python-pytest
+    - apt-get install -y cmake gcc-9 g++-9 libc-dev build-essential fuse libfuse-dev mandoc python-pytest fio
 
 ubuntu_1804_clang: &ubuntu_1804_clang
   <<: *ubuntu_1804
@@ -37,7 +37,7 @@ ubuntu_1804_clang: &ubuntu_1804_clang
     - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 15CF4D18AF4F7421
     - apt-get update
   install_script:
-    - apt-get install -y cmake clang-${CLANG_VERSION} libc-dev build-essential fuse libfuse-dev mandoc python-pytest
+    - apt-get install -y cmake clang-${CLANG_VERSION} libc-dev build-essential fuse libfuse-dev mandoc python-pytest fio
     - update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${CLANG_VERSION} 10
 
 macos_1015: &macos_1015
@@ -47,7 +47,7 @@ macos_1015: &macos_1015
     CC: clang
   install_script:
     - brew install --cask osxfuse
-    - brew install cmake python3
+    - brew install cmake python3 fio
     - sudo python3 -m pip install pytest
 
 macos_1101: &macos_1101
@@ -57,7 +57,7 @@ macos_1101: &macos_1101
     - brew update-reset
     - brew upgrade
     - brew install --cask osxfuse
-    - brew install cmake python3
+    - brew install cmake python3 fio
     - sudo python3 -m pip install pytest
 
 freebsd_12_2: &freebsd_12_2
@@ -66,7 +66,7 @@ freebsd_12_2: &freebsd_12_2
   env:
     CC: clang
   install_script:
-    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf python3 py37-pip
+    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf python3 py37-pip fio
     - kldload fuse
     - kldstat
     - sudo python3.7 -m pip install pytest
