@@ -38,6 +38,7 @@ if (${HAVE_XATTR})
 endif ()
 
 enable_testing()
+add_subdirectory(tests)
 add_test(NAME pytest COMMAND pytest -c ${PROJECT_SOURCE_DIR}/tests/pytest.ini ${PROJECT_SOURCE_DIR}/tests/
          WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 

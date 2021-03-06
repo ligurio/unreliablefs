@@ -94,3 +94,6 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "uses_fuse: mark test to run only with FUSE subsystem"
     )
+    config.addinivalue_line(
+        "markers", "long: mark test that run longer than others"
+    )

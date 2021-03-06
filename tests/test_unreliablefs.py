@@ -10,9 +10,11 @@ import fcntl
 import subprocess
 import os
 import sys
+import shutil
 import pytest
 import stat
 import shutil
+import subprocess
 import filecmp
 import errno
 from contextlib import contextmanager
@@ -547,3 +549,17 @@ def test_utimens(setup_unreliablefs, symlink):
         fstat = os.lstat(link_path)
         assert fstat.st_atime == link_atime
         assert fstat.st_mtime == link_mtime
+
+@pytest.mark.long
+def test_fsx(setup_unreliablefs):
+    fsx_bin = shutil.which('fsx') or 'build/tests/fsx'
+    if not fsx_bin:
+        pytest.skip('fsx is required to execute testcase')
+
+    mnt_dir, src_dir = setup_unreliablefs
+    name = name_generator()
+    src_name = pjoin(src_dir, name)
+    mnt_name = pjoin(mnt_dir, name)
+    os_create(mnt_name)
+    cmd_line = '{} -N 10000 -d -W -c 4 {}'.format(fsx_bin, mnt_name)
+    subprocess.check_call(cmd_line.split(' '))
