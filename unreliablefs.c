@@ -29,12 +29,12 @@ static struct fuse_operations unreliable_ops = {
     .flush       = unreliable_flush,
     .release     = unreliable_release,
     .fsync       = unreliable_fsync,
-#if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
+#ifdef HAVE_XATTR
     .setxattr    = unreliable_setxattr,
     .getxattr    = unreliable_getxattr,
     .listxattr   = unreliable_listxattr,
     .removexattr = unreliable_removexattr,
-#endif /* __OpenBSD__ */
+#endif /* HAVE_XATTR */
     .opendir     = unreliable_opendir,
     .readdir     = unreliable_readdir,
     .releasedir  = unreliable_releasedir,
