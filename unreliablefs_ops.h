@@ -50,8 +50,10 @@ int unreliable_ftruncate(const char *, off_t, struct fuse_file_info *);
 int unreliable_fgetattr(const char *, struct stat *, struct fuse_file_info *);
 int unreliable_lock(const char *, struct fuse_file_info *, int cmd,
                  struct flock *);
+#if !defined(__OpenBSD__)
 int unreliable_ioctl(const char *, int cmd, void *arg,
                   struct fuse_file_info *, unsigned int flags, void *data);
+#endif
 int unreliable_write_buf(const char *, struct fuse_bufvec *buf, off_t off,
                       struct fuse_file_info *);
 int unreliable_read_buf(const char *, struct fuse_bufvec **bufp,

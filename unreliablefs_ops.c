@@ -626,6 +626,7 @@ int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
     return 0;
 }
 
+#if !defined(__OpenBSD__)
 int unreliable_ioctl(const char *path, int cmd, void *arg,
                      struct fuse_file_info *fi,
                      unsigned int flags, void *data)
@@ -642,6 +643,7 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
     
     return ret;
 }
+#endif /* __OpenBSD__ */
 
 #ifdef HAVE_FLOCK
 int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
