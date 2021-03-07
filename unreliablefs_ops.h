@@ -36,7 +36,7 @@ int unreliable_removexattr(const char *, const char *);
 
 int unreliable_opendir(const char *, struct fuse_file_info *);
 int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-                    off_t offset, struct fuse_file_info *fi);
+                       off_t offset, struct fuse_file_info *fi);
 int unreliable_releasedir(const char *, struct fuse_file_info *);
 int unreliable_fsyncdir(const char *, int, struct fuse_file_info *);
 
@@ -49,21 +49,21 @@ int unreliable_create(const char *, mode_t, struct fuse_file_info *);
 int unreliable_ftruncate(const char *, off_t, struct fuse_file_info *);
 int unreliable_fgetattr(const char *, struct stat *, struct fuse_file_info *);
 int unreliable_lock(const char *, struct fuse_file_info *, int cmd,
-                 struct flock *);
+                    struct flock *);
 #if !defined(__OpenBSD__)
 int unreliable_ioctl(const char *, int cmd, void *arg,
-                  struct fuse_file_info *, unsigned int flags, void *data);
+                     struct fuse_file_info *, unsigned int flags, void *data);
 #endif
 int unreliable_write_buf(const char *, struct fuse_bufvec *buf, off_t off,
-                      struct fuse_file_info *);
+                         struct fuse_file_info *);
 int unreliable_read_buf(const char *, struct fuse_bufvec **bufp,
-                     size_t size, off_t off, struct fuse_file_info *);
+                        size_t size, off_t off, struct fuse_file_info *);
 #ifdef HAVE_FLOCK
 int unreliable_flock(const char *, struct fuse_file_info *, int op);
 #endif /* HAVE_FLOCK */
 #ifdef HAVE_FALLOCATE
 int unreliable_fallocate(const char *, int, off_t, off_t,
-                      struct fuse_file_info *);
+                         struct fuse_file_info *);
 #endif /* HAVE_FALLOCATE */
 
 #ifdef HAVE_UTIMENSAT
