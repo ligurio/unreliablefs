@@ -48,7 +48,9 @@ static struct fuse_operations unreliable_ops = {
     .ftruncate   = unreliable_ftruncate,
     .fgetattr    = unreliable_fgetattr,
     .lock        = unreliable_lock,
+#if !defined(__OpenBSD__)
     .ioctl       = unreliable_ioctl,
+#endif /* __OpenBSD__ */
 #ifdef HAVE_FLOCK
     .flock       = unreliable_flock,
 #endif /* HAVE_FLOCK */
