@@ -1,3 +1,5 @@
+#define FUSE_USE_VERSION 29
+
 #include <errno.h>
 #include <stdlib.h>
 
