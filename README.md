@@ -22,7 +22,10 @@ $ cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j
 ### Using
 
 ```sh
-$ ./build/unreliablefs ~/Downloads/mnt/ -omodules=subdir,subdir=/tmp
-$ ls ~/Downloads/mnt/
-$ umount /tmp/unreliable
+$ mkdir /tmp/basedir
+$ mkdir /tmp/fs
+$ unreliablefs /tmp/fs -omodules=subdir,subdir=/tmp/basedir
+$ cd /tmp/fs
+$ ls -la
+$ umount /tmp/fs
 ```

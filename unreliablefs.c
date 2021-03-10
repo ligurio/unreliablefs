@@ -1,5 +1,6 @@
 #define FUSE_USE_VERSION 29
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,30 +63,63 @@ static struct fuse_operations unreliable_ops = {
 #endif /* HAVE_UTIMENSAT */
 };
 
+struct unreliablefs_config {
+     int seed;
+     char *base_dir;
+};
+
+enum {
+     KEY_HELP,
+     KEY_VERSION,
+};
+
+#define UNRELIABLEFS_OPT(t, p, v) { t, offsetof(struct unreliablefs_config, p), v }
+#define UNRELIABLEFS_VERSION "0.1"
+
+static struct fuse_opt unreliablefs_opts[] = {
+    UNRELIABLEFS_OPT("seed=%i",           seed, 0),
+    UNRELIABLEFS_OPT("base_dir=%s",       base_dir, 0),
+
+    FUSE_OPT_KEY("-V",             KEY_VERSION),
+    FUSE_OPT_KEY("--version",      KEY_VERSION),
+    FUSE_OPT_KEY("-h",             KEY_HELP),
+    FUSE_OPT_KEY("--help",         KEY_HELP),
+    FUSE_OPT_END
+};
+
+static int unreliablefs_opt_proc(void *data, const char *arg, int key, struct fuse_args *outargs)
+{
+    switch (key) {
+    case KEY_HELP:
+            fprintf(stderr,
+                    "\n"
+                    "UnreliableFS options:\n"
+                    "    -o seed=NUM\n"
+                    "    -o base_dir=STRING\n\n");
+            fuse_opt_add_arg(outargs, "-h");
+            fuse_main(outargs->argc, outargs->argv, &unreliable_ops, NULL);
+            exit(1);
+
+    case KEY_VERSION:
+            fprintf(stderr, "UnreliableFS version %s\n", UNRELIABLEFS_VERSION);
+            fuse_opt_add_arg(outargs, "--version");
+            fuse_main(outargs->argc, outargs->argv, &unreliable_ops, NULL);
+            exit(0);
+    }
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
-#if defined(DEBUG)
-    int fuse_argc = 3;
-    char *fuse_argv[fuse_argc];
+    struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
+    struct unreliablefs_config conf;
 
-    if (argc != 2) {
-	fprintf(stderr, "Usage: %s MOUNTPOINT\n", argv[0]);
-	return EXIT_FAILURE;
-    }
+    memset(&conf, 0, sizeof(conf));
 
-    fuse_argv[0] = argv[0];
-    fuse_argv[1] = argv[1];
-    #if FUSE_USE_VERSION < 30
-	fuse_argv[2] = "-ononempty,suid,dev,allow_other,default_permissions";
-    #else
-	fuse_argv[2] = "-osuid,dev,allow_other,default_permissions";
-    #endif
-    fuse_argv[3] = NULL;
-
+    fuse_opt_parse(&args, &conf, unreliablefs_opts, unreliablefs_opt_proc);
+    /* fuse_opt_add_arg(&args, "-omodules=subdir,subdir=/tmp"); */
     fprintf(stdout, "Starting FUSE filesystem\n");
-    return fuse_main(fuse_argc, fuse_argv, &unreliable_ops, NULL);
-#else
-    fprintf(stdout, "Starting FUSE filesystem\n");
-    return fuse_main(argc, argv, &unreliable_ops, NULL);
-#endif /* DEBUG */
+    fprintf(stdout, "Seed %d, base_dir %s\n", conf.seed, conf.base_dir);
+
+    return fuse_main(args.argc, args.argv, &unreliable_ops, NULL);
 }
