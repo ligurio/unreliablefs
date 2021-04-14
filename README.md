@@ -1,5 +1,7 @@
 ## UnreliableFS
 
+[![Build Status](https://api.cirrus-ci.com/github/ligurio/unreliablefs.svg)](https://cirrus-ci.com/github/ligurio/unreliablefs)
+
 is a FUSE-based fault injection filesystem.
 
 ### Building
