@@ -1,12 +1,10 @@
 #define _GNU_SOURCE
-#include <stdlib.h>
 #include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 
-#include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
 #ifdef HAVE_XATTR
