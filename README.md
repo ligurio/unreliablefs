@@ -2,7 +2,14 @@
 
 [![Build Status](https://api.cirrus-ci.com/github/ligurio/unreliablefs.svg)](https://cirrus-ci.com/github/ligurio/unreliablefs)
 
-is a FUSE-based fault injection filesystem.
+is a FUSE-based fault injection filesystem that allows to change
+fault-injections in runtime.
+
+Supported fault injections are:
+
+- `errinj_noop` - replace file operation with no operation
+  (similar to [libeatmydata](https://github.com/stewartsmith/libeatmydata),
+  but applicable to any file operation).
 
 ### Building
 
@@ -22,7 +29,14 @@ $ cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j
 ### Using
 
 ```sh
-$ ./build/unreliablefs ~/Downloads/mnt/ -omodules=subdir,subdir=/tmp
-$ ls ~/Downloads/mnt/
-$ umount /tmp/unreliable
+$ mkdir /tmp/fs
+$ unreliablefs /tmp/fs -base_dir=/tmp -seed=1618680646
+$ cat << EOF > /tmp/fs/unreliablefs.conf
+[errinj_noop]
+op_regexp = .*
+path_regexp = .*
+probability = 30
+EOF
+$ ls -la
+$ umount /tmp/fs
 ```

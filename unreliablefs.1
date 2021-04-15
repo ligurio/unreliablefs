@@ -9,13 +9,15 @@
 .Sh SYNOPSIS
 .Nm
 mountpoint
-.Op Fl h
+.Op Fl basedir Ar path
+.Op Fl seed Ar number
+.Op Fl hvdf
 .Sh DESCRIPTION
 The
 .Nm
 is a filesystem that allows to inject errors on file operations.
-It works as pass-through filesystem and redirects file operations to a file
-objects on real filesystem.
+Without configuration it works as pass-through filesystem and redirects file
+operations to a file objects on a real filesystem.
 .Pp
 .Nm
 uses Filesystem in Userspace (FUSE) that allows easy setup without requiring a
@@ -24,6 +26,26 @@ Without any other configuration, any files in a mounted directory will be
 available unchanged.
 To mount filesystem it is required to specify mountpoint and after mount it
 will contain the same file tree as a root filesystem.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl basedir Ar path
+Specify path to a directory that should be mount.
+.It Fl seed Ar number
+Specify a seed.
+.It Fl f
+Do not daemonize.
+.It Fl d
+Do not daemonize.
+If this option is specified,
+.Nm
+will run in the foreground and log to
+.Em stderr .
+.It Fl v
+Show version.
+.It Fl h
+Show usage.
+.El
 .Pp
 Supported file operations are:
 .Xr access 2 ,
@@ -69,16 +91,24 @@ Following functions are unsupported on OpenBSD:
 .Sh EXAMPLES
 .Bd -literal
 
-$ mkdir /tmp/unreliable
-$ unreliablefs /tmp/unreliable
-$ umount /tmp/unreliable
+$ mkdir /tmp/fs
+$ unreliablefs /tmp/fs -basedir=/tmp -seed=1618680646
+$ cat << EOF > /tmp/fs/unreliablefs.conf
+[errinj_noop]
+op_regexp = .*
+path_regexp = .*
+probability = 30
+EOF
+$ ls -la
+$ umount /tmp/fs
 
 .Ed
 .Sh SEE ALSO
 .Xr fusermount 1 ,
 .Xr errno 2 ,
 .Xr fuse 4 ,
-.Xr re_format 7 ,
+.Xr fuse 8 ,
+.Xr unreliablefs.conf 5 ,
 .Xr mount.fuse 8
 .Sh AUTHORS
 .An -nosplit

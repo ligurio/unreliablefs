@@ -5,7 +5,8 @@ include(CheckFunctionExists)
 project (unreliablefs
          DESCRIPTION "A FUSE-based fault injection filesystem.")
 
-set(UNRELIABLEFS_SRC unreliablefs.c
+set(UNRELIABLEFS_SRC conf.c
+		unreliablefs.c
 		unreliablefs_errinj.c
 		unreliablefs_ops.c)
 
@@ -56,7 +57,7 @@ add_subdirectory(tests)
 add_test(NAME pytest COMMAND pytest -c ${PROJECT_SOURCE_DIR}/tests/pytest.ini ${PROJECT_SOURCE_DIR}/tests/
          WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-set(MANUAL_PAGES "unreliablefs.1")
+set(MANUAL_PAGES "unreliablefs.1;unreliablefs.conf.5")
 add_custom_target(check DEPENDS check-mandoc)
 add_custom_target(check-mandoc DEPENDS ${MANUAL_PAGES})
 add_custom_command(TARGET check-mandoc

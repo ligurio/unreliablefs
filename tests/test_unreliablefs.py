@@ -43,8 +43,8 @@ def setup_unreliablefs(tmpdir):
     mnt_dir = str(tmpdir.mkdir('mnt'))
     src_dir = str(tmpdir.mkdir('src'))
 
-    modules = "-omodules=subdir,subdir={}".format(src_dir)
-    cmdline = base_cmdline + [ pjoin(basename, 'build/unreliablefs'), mnt_dir, modules]
+    options = "-basedir={}".format(src_dir)
+    cmdline = base_cmdline + [ pjoin(basename, 'build/unreliablefs'), mnt_dir, options ]
     mount_process = subprocess.Popen(cmdline)
     wait_for_mount(mount_process, mnt_dir)
 
