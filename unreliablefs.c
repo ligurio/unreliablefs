@@ -1,11 +1,9 @@
 #define FUSE_USE_VERSION 29
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "unreliablefs_ops.h"
 
