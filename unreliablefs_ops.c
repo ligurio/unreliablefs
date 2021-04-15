@@ -16,8 +16,9 @@
 #define _XOPEN_SOURCE 700
 #endif
 
-#include "unreliablefs_errinj.h"
 #include "unreliablefs_ops.h"
+
+extern int error_inject(const char* path, char* operation);
 
 int unreliable_lstat(const char *path, struct stat *buf)
 {

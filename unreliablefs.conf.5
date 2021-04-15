@@ -1,0 +1,73 @@
+.\" Copyright (c) 2021 Sergey Bronnikov
+.\"
+.Dd $Mdocdate: April 15 2021 $
+.Dt UNRELIABLEFS.CONF 5
+.Os
+.Sh NAME
+.Nm unreliablefs.conf
+.Nd format of the configuration file used by
+.Xr unreliablefs 1
+.Sh DESCRIPTION
+The configuration file format is quite simple.
+Sections are delimited by square brackets:
+.Pp
+.Rs
+[Section]
+.Re
+.Pp
+And options within brackets sections are simple key value pairs:
+.Pp
+.Rs
+Option = Value
+.Re
+.Sh OPTIONS
+Per-fault-injection customizable variables are specified within sections
+with section names matching the fault-injection name.
+.Pp
+Supported fault injections are:
+.Bl -tag -width Ds
+.It Cm errinj_noop
+File operation replaced with no-op.
+.El
+.Pp
+The options are:
+.Bl -tag -width Ds
+.It Cm op_regexp
+Sets the regular expression that matches file operation for what fault injection is applicable.
+Option uses format of regular expressions described in
+.Xr re_format 7 .
+POSIX Extended Regular Expression syntax is supported and regular expressions do not differentiate case.
+.It Cm path_regexp
+Sets the regular expression that matches paths where fault injection is applicable.
+Option uses format of regular expressions described in
+.Xr re_format 7 .
+POSIX Extended Regular Expression syntax is supported and regular expressions do not differentiate case.
+.It Cm probability
+Sets the probability in percents.
+Probability equal to 0 means that error injection will never happen.
+Probability equal to 100 means that error injection will happen on each file operation.
+.El
+.Sh EXAMPLES
+.Bd -literal
+
+[errinj_noop]
+path_regexp = .*
+op_regexp = .*
+probability = 70
+
+.Ed
+.Sh SEE ALSO
+.Xr unreliablefs 1 ,
+.Xr errno 2 ,
+.Xr syslog 3 ,
+.Xr re_format 7
+.Sh AUTHORS
+.An -nosplit
+The
+.Xr unreliablefs 1
+utility was written by
+.An Sergey
+.An Bronnikov .
+.\" .Sh HISTORY
+.\" .Sh BUGS
+.\" .Sh CAVEATS
