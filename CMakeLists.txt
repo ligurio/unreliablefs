@@ -37,6 +37,20 @@ if (${HAVE_XATTR})
     target_compile_definitions(${PROJECT_NAME} PUBLIC HAVE_XATTR)
 endif ()
 
+option(ENABLE_ASAN "Enable AddressSanitizer, a fast memory error detector
+                    based on compiler instrumentation" OFF)
+if(ENABLE_ASAN)
+    target_compile_options(${PROJECT_NAME} PUBLIC -fsanitize=address)
+    target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address)
+endif()
+
+option(ENABLE_UBSAN "Enable UBSanitizer, undefined behaviour
+                     detector based on compiler instrumentation" OFF)
+if(ENABLE_UBSAN)
+    target_compile_options(${PROJECT_NAME} PUBLIC -fsanitize=undefined)
+    target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=undefined)
+endif()
+
 enable_testing()
 add_subdirectory(tests)
 add_test(NAME pytest COMMAND pytest -c ${PROJECT_SOURCE_DIR}/tests/pytest.ini ${PROJECT_SOURCE_DIR}/tests/
