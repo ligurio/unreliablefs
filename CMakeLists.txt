@@ -9,9 +9,6 @@ set(UNRELIABLEFS_SRC unreliablefs.c
 		unreliablefs_errinj.c
 		unreliablefs_ops.c)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -D_FILE_OFFSET_BITS=64")
-
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 find_package(FUSE 2.9 REQUIRED)
 
@@ -19,6 +16,9 @@ add_definitions(${FUSE_DEFINITIONS})
 add_executable(${PROJECT_NAME} ${UNRELIABLEFS_SRC})
 target_include_directories(${PROJECT_NAME} PRIVATE ${FUSE_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${FUSE_LIBRARIES})
+
+target_compile_options(${PROJECT_NAME} PUBLIC -D_FILE_OFFSET_BITS=64 -Wall -Wextra -Wno-unused-parameter)
+target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++11 -D_FILE_OFFSET_BITS=64>)
 
 check_function_exists(fallocate HAVE_FALLOCATE)
 check_function_exists(fallocate HAVE_FLOCK)
