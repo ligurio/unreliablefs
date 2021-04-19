@@ -40,16 +40,6 @@ ubuntu_1804_clang: &ubuntu_1804_clang
     - apt-get install -y cmake clang-${CLANG_VERSION} libc-dev build-essential fuse libfuse-dev mandoc python-pytest fio
     - update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${CLANG_VERSION} 10
 
-macos_1015: &macos_1015
-  osx_instance:
-    image: catalina-base
-  env:
-    CC: clang
-  install_script:
-    - brew install --cask osxfuse
-    - brew install cmake python3 fio
-    - sudo python3 -m pip install pytest
-
 macos_1101: &macos_1101
   osx_instance:
     image: big-sur-base
@@ -79,8 +69,6 @@ task:
       <<: *ubuntu_1804_clang
     - name: "Build and test on FreeBSD 12.2"
       <<: *freebsd_12_2
-    - name: "Build and test on macOS 10.15 (Catalina)"
-      <<: *macos_1015
     - name: "Build and test on macOS 11.0.1 (Big Sur)"
       <<: *macos_1101
 
