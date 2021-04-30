@@ -17,6 +17,8 @@
 
 #define ERRNO_NOOP -999
 
+#define DEFAULT_SIGNAL_NAME SIGKILL
+
 int error_inject(const char* path, char* operation);
 struct err_inj_q *config_init(const char* conf_path);
 void config_delete(struct err_inj_q *config);
@@ -26,10 +28,12 @@ int is_regex_matched(const char *regex, const char *string);
 
 const char *errinj_name[] =
 {
+    "errinj_kill_caller",
     "errinj_noop",
 };
 
 typedef enum {
+    ERRINJ_KILL_CALLER,
     ERRINJ_NOOP,
 } errinj_type;
 
