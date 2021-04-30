@@ -28,6 +28,8 @@ Supported fault injections are:
 .Bl -tag -width Ds
 .It Cm errinj_noop
 File operation replaced with no-op.
+.It Cm errinj_kill_caller
+Send SIGKILL signal to a process that invoked file operation.
 .El
 .Pp
 The options are:

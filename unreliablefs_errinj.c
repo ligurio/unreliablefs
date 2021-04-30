@@ -3,10 +3,12 @@
 #include <fuse.h>
 #include <libgen.h> /* basename() and dirname() */
 #include <regex.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/types.h>
 #include <sys/queue.h>
 
 #include "conf.h"
@@ -54,6 +56,19 @@ int error_inject(const char* path, char* operation)
         case ERRINJ_NOOP:
             fprintf(stderr, "%s triggered on operation '%s', %s\n",
                             errinj_name[err->type], operation, path);
+            rc = 0;
+            break;
+        case ERRINJ_KILL_CALLER:
+            fprintf(stderr, "%s triggered on operation '%s', %s\n",
+                            errinj_name[err->type], operation, path);
+            struct fuse_context *cxt = fuse_get_context();
+            if (cxt) {
+                int ret = kill(cxt->pid, DEFAULT_SIGNAL_NAME);
+                if (!ret) {
+                    perror("kill");
+                }
+            }
+            free(cxt);
             rc = 0;
             break;
         }

@@ -10,6 +10,7 @@ Supported fault injections are:
 - `errinj_noop` - replace file operation with no operation
   (similar to [libeatmydata](https://github.com/stewartsmith/libeatmydata),
   but applicable to any file operation).
+- `errinj_kill_caller` - send SIGKILL to a process that invoked file operation.
 
 ### Building
 
