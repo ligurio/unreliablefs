@@ -15,6 +15,8 @@
 #define MIN_PROBABLITY 0
 #define MAX_PROBABLITY 100
 
+#define DEFAULT_SIGNAL_NAME SIGKILL
+
 int error_inject(const char* path, char* operation);
 struct err_inj_q *config_init(const char* conf_path);
 void config_delete(struct err_inj_q *config);
@@ -25,10 +27,12 @@ int is_regex_matched(const char *regex, const char *string);
 const char *errinj_name[] =
 {
     "errinj_noop",
+    "errinj_kill_caller",
 };
 
 typedef enum {
     ERRINJ_NOOP,
+    ERRINJ_KILL_CALLER,
 } errinj_type;
 
 typedef struct errinj_conf errinj_conf;
