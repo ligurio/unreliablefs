@@ -3,7 +3,7 @@
 [![Build Status](https://api.cirrus-ci.com/github/ligurio/unreliablefs.svg)](https://cirrus-ci.com/github/ligurio/unreliablefs)
 
 is a FUSE-based fault injection filesystem that allows to change
-fault-injections in runtime.
+fault-injections in runtime using simple configuration file.
 
 Supported fault injections are:
 
@@ -43,3 +43,40 @@ EOF
 $ ls -la
 $ umount /tmp/fs
 ```
+
+See documentation in [unreliablefs.1](https://ligurio.github.io/unreliablefs/unreliablefs.1.html) and
+[unreliablefs.conf.5](https://ligurio.github.io/unreliablefs/unreliablefs.conf.5.html).
+
+### References
+
+- "Can Applications Recover from fsync Failures?" - Anthony Rebello, Yuvraj
+  Patel, Ramnatthan Alagappan, Andrea C. Arpaci-Dusseau and Remzi H.
+- "All File Systems Are Not Created Equal: On the Complexity of Crafting
+  Crash-Consistent Applications" - Thanumalayan Sankaranarayana Pillai, Vijay
+  Chidambaram, Ramnatthan Alagappan, Samer Al-Kiswany, Andrea C.
+  Arpaci-Dusseau, and Remzi H. Arpaci-Dusseau, University of Wisconsin–Madison
+- "A survey on simulation-based fault injection tools for complex systems" -
+  Maha Kooli, Giorgio Di Natale
+- "To FUSE or Not to FUSE: Performance of User-Space File Systems" - Bharath
+  Kumar Reddy Vangoor, Vasily Tarasov, Erez Zadok
+- "Performance and Resource Utilization of FUSE User-Space File Systems"
+  Bharath Kumar Reddy Vangoor, Prafful Agarwal, Manu Mathew, Arun Ramachandran,
+  and Swaminathan Sivaraman, Vasily Tarasov, Erez Zadok.
+- "Performance and Extension of User Space File Systems" - Aditya Rajgarhia, Ashish Gehani
+- "Files are hard" - Dan Luu
+- "Systematic Testing of Fault Handling Code in Linux Kernel" - Alexey
+  Khoroshilov, Andrey Tsyvarev
+- "Software-Based Fault Injection Framework For Storage Systems" - Vinod
+  Eswaraprasad, Smitha Jayaram
+- Many consumer-grade SSD drives can ignore disk flushes and falsely report to
+  operating systems that data was written while it in fact was not. See [Virtuozzo Storage Documentation](https://docs.virtuozzo.com/virtuozzo_hybrid_server_7_installation_guide/preparing-for-installation/planning-storage-gui.html#planning-node-hardware-configurations) and [PostgreSQL Documentation](https://www.postgresql.org/docs/current/wal-reliability.html).
+
+### Similar projects
+
+- CuttleFS - FUSE-based file system with private page cache to simulate post fsync
+  failure characteristics of modern file systems.
+- libeatmydata - `LD_PRELOAD` library that disables all forms of writing data
+  safely to disk. `fsync()` becomes a NO-OP, `O_SYNC` is removed etc.
+- CharybdeFS - FUSE-based fault injection filesystem with a Thrift RPC
+  interface for instrumentation.
+- PetardFS - FUSE-based file system for injecting intentional errors.
