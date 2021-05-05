@@ -30,6 +30,10 @@ Supported fault injections are:
 File operation replaced with no-op.
 .It Cm errinj_kill_caller
 Send SIGKILL signal to a process that invoked file operation.
+.It Cm errinj_errno
+Set random errno.
+.Xr errno 2
+limited by supported errno's.
 .El
 .Pp
 The options are:
@@ -56,6 +60,10 @@ Probability equal to 100 means that error injection will happen on each file ope
 path_regexp = .*
 op_regexp = .*
 probability = 70
+
+[errinj_errno]
+path_regexp = *.xlog
+probability = 4
 
 .Ed
 .Sh SEE ALSO
