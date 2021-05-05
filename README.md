@@ -7,6 +7,7 @@ fault-injections in runtime.
 
 Supported fault injections are:
 
+- `errinj_errno` - return error value and set random errno.
 - `errinj_kill_caller` - send SIGKILL to a process that invoked file operation.
 - `errinj_noop` - replace file operation with no operation
   (similar to [libeatmydata](https://github.com/stewartsmith/libeatmydata),

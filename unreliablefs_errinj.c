@@ -15,6 +15,146 @@
 #include "unreliablefs.h"
 #include "unreliablefs_errinj.h"
 
+static int rand_range(int, int);
+int error_inject(const char* path, fuse_op operation);
+
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+
+#define RANDOM_ELEMENT(arr) \
+        (arr[rand_range(0, ARRAY_SIZE(arr))]);
+
+static int op_random_errno(int op_n)
+{
+    int rc = -1;
+    switch (op_n) {
+    case OP_LSTAT:
+        rc = RANDOM_ELEMENT(errno_lstat);
+        break;
+    case OP_GETATTR:
+        rc = RANDOM_ELEMENT(errno_lstat);
+        break;
+    case OP_READLINK:
+        rc = RANDOM_ELEMENT(errno_readlink);
+        break;
+    case OP_MKNOD:
+        rc = RANDOM_ELEMENT(errno_mknod);
+        break;
+    case OP_MKDIR:
+        rc = RANDOM_ELEMENT(errno_mkdir);
+        break;
+    case OP_UNLINK:
+        rc = RANDOM_ELEMENT(errno_unlink);
+        break;
+    case OP_RMDIR:
+        rc = RANDOM_ELEMENT(errno_rmdir);
+        break;
+    case OP_SYMLINK:
+        rc = RANDOM_ELEMENT(errno_symlink);
+        break;
+    case OP_RENAME:
+        rc = RANDOM_ELEMENT(errno_rename);
+        break;
+    case OP_LINK:
+        rc = RANDOM_ELEMENT(errno_link);
+        break;
+    case OP_CHMOD:
+        rc = RANDOM_ELEMENT(errno_chmod);
+        break;
+    case OP_CHOWN:
+        rc = RANDOM_ELEMENT(errno_chmod);
+        break;
+    case OP_TRUNCATE:
+        rc = RANDOM_ELEMENT(errno_truncate);
+        break;
+    case OP_OPEN:
+        rc = RANDOM_ELEMENT(errno_creat);
+        break;
+    case OP_READ:
+        rc = RANDOM_ELEMENT(errno_read);
+        break;
+    case OP_WRITE:
+        rc = RANDOM_ELEMENT(errno_write);
+        break;
+    case OP_STATFS:
+        rc = RANDOM_ELEMENT(errno_statfs);
+        break;
+    case OP_FLUSH:
+        rc = RANDOM_ELEMENT(errno_close);
+        break;
+    case OP_RELEASE:
+        rc = RANDOM_ELEMENT(errno_close);
+        break;
+    case OP_FSYNC:
+        rc = RANDOM_ELEMENT(errno_fsync);
+        break;
+#ifdef HAVE_XATTR
+    case OP_SETXATTR:
+        rc = RANDOM_ELEMENT(errno_setxattr);
+        break;
+    case OP_GETXATTR:
+        rc = RANDOM_ELEMENT(errno_getxattr);
+        break;
+    case OP_LISTXATTR:
+        rc = RANDOM_ELEMENT(errno_listxattr);
+        break;
+    case OP_REMOVEXATTR:
+        rc = RANDOM_ELEMENT(errno_removexattr);
+        break;
+#endif /* HAVE_XATTR */
+    case OP_OPENDIR:
+        rc = RANDOM_ELEMENT(errno_opendir);
+        break;
+    case OP_READDIR:
+        rc = RANDOM_ELEMENT(errno_readdir);
+        break;
+    case OP_RELEASEDIR:
+        rc = RANDOM_ELEMENT(errno_close);
+        break;
+    case OP_FSYNCDIR:
+        rc = RANDOM_ELEMENT(errno_fsync);
+        break;
+    case OP_ACCESS:
+        rc = RANDOM_ELEMENT(errno_access);
+        break;
+    case OP_CREAT:
+        rc = RANDOM_ELEMENT(errno_creat);
+        break;
+    case OP_FTRUNCATE:
+        rc = RANDOM_ELEMENT(errno_ftruncate);
+        break;
+    case OP_FGETATTR:
+        rc = RANDOM_ELEMENT(errno_lstat);
+        break;
+    case OP_LOCK:
+        rc = RANDOM_ELEMENT(errno_fcntl);
+        break;
+#if !defined(__OpenBSD__)
+    case OP_IOCTL:
+        rc = RANDOM_ELEMENT(errno_ioctl);
+        break;
+#endif /* __OpenBSD__ */
+#ifdef HAVE_FLOCK
+    case OP_FLOCK:
+        rc = RANDOM_ELEMENT(errno_flock);
+        break;
+#endif /* HAVE_FLOCK */
+#ifdef HAVE_FALLOCATE
+    case OP_FALLOCATE:
+        rc = RANDOM_ELEMENT(errno_fallocate);
+        break;
+#endif /* HAVE_FALLOCATE */
+#ifdef HAVE_UTIMENSAT
+    case OP_UTIMENS:
+        rc = RANDOM_ELEMENT(errno_utimensat);
+        break;
+#endif /* HAVE_UTIMENSAT */
+    default:
+        fprintf(stderr, "Unsupported operation (%s)\n", fuse_op_name[op_n]);
+    }
+
+    return rc;
+}
+
 static int rand_range(int min_n, int max_n)
 {
     return rand() % (max_n - min_n + 1) + min_n;
@@ -22,6 +162,9 @@ static int rand_range(int min_n, int max_n)
 
 int error_inject(const char* path, fuse_op operation)
 {
+    /* instead of returning an error in 'errno', the operation should return
+     * the negated error value (-errno) directly.
+     */
     int rc = -0;
     struct errinj_conf *err;
     /* read configuration file on change */
@@ -70,6 +213,11 @@ int error_inject(const char* path, fuse_op operation)
                 fprintf(stdout, "send signal %s to TID %d\n",
                                 strsignal(DEFAULT_SIGNAL_NAME), cxt->pid);
             }
+            break;
+        case ERRINJ_ERRNO:
+            rc = op_random_errno(operation);
+            fprintf(stdout, "errno '%s'\n", strerror(rc));
+            rc = -rc;
             break;
         }
     }
