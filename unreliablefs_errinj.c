@@ -20,7 +20,7 @@ static int rand_range(int min_n, int max_n)
     return rand() % (max_n - min_n + 1) + min_n;
 }
 
-int error_inject(const char* path, char* operation)
+int error_inject(const char* path, fuse_op operation)
 {
     int rc = -0;
     struct errinj_conf *err;
@@ -43,18 +43,19 @@ int error_inject(const char* path, char* operation)
                             errinj_name[err->type], err->probability);
             continue;
         }
+        const char* op_name = fuse_op_name[operation];
 	if (is_regex_matched(err->path_regexp, path) != 0) {
 	    fprintf(stderr, "errinj '%s' skipped: path_regexp (%s) is not matched\n",
                             errinj_name[err->type], err->path_regexp);
 	    continue;
 	}
-	if (is_regex_matched(err->op_regexp, operation) != 0) {
+	if (is_regex_matched(err->op_regexp, op_name) != 0) {
 	    fprintf(stderr, "errinj '%s' skipped: op_regexp (%s) is not matched\n",
                             errinj_name[err->type], err->op_regexp);
 	    continue;
 	}
         fprintf(stdout, "%s triggered on operation '%s', %s\n",
-                        errinj_name[err->type], operation, path);
+                        errinj_name[err->type], op_name, path);
 	switch (err->type) {
         case ERRINJ_NOOP:
             rc = -ERRNO_NOOP;

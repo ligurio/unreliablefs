@@ -3,6 +3,8 @@
 
 #include <signal.h>
 
+#include "unreliablefs_ops.h"
+
 #define MAX_ERRINJ_NAME_LENGTH 20
 
 #if !defined(__OpenBSD__) && !defined(__FreeBSD__) && !defined(__APPLE__)
@@ -19,7 +21,7 @@
 
 #define DEFAULT_SIGNAL_NAME SIGKILL
 
-int error_inject(const char* path, char* operation);
+int error_inject(const char* path, fuse_op operation);
 struct err_inj_q *config_init(const char* conf_path);
 void config_delete(struct err_inj_q *config);
 int conf_option_handler(void* cfg, const char* section,
