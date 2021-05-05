@@ -18,11 +18,61 @@
 
 #include "unreliablefs_ops.h"
 
-extern int error_inject(const char* path, char* operation);
+const char *fuse_op_name[] = {
+    "getattr",
+    "readlink",
+    "mknod",
+    "mkdir",
+    "unlink",
+    "rmdir",
+    "symlink",
+    "rename",
+    "link",
+    "chmod",
+    "chown",
+    "truncate",
+    "open",
+    "read",
+    "write",
+    "statfs",
+    "lstat", /* ??? */
+    "flush",
+    "release",
+    "fsync",
+#ifdef HAVE_XATTR
+    "setxattr",
+    "getxattr",
+    "listxattr",
+    "removexattr",
+#endif /* HAVE_XATTR */
+    "opendir",
+    "readdir",
+    "releasedir",
+    "fsyncdir",
+    "access",
+    "creat",
+    "ftruncate",
+    "fgetattr",
+    "lock",
+#if !defined(__OpenBSD__)
+    "ioctl",
+#endif /* __OpenBSD__ */
+#ifdef HAVE_FLOCK
+    "flock",
+#endif /* HAVE_FLOCK */
+#ifdef HAVE_FALLOCATE
+    "fallocate",
+#endif /* HAVE_FALLOCATE */
+#ifdef HAVE_UTIMENSAT
+    "utimens",
+#endif /* HAVE_UTIMENSAT */
+};
+
+extern int error_inject(const char* path, fuse_op operation);
 
 int unreliable_lstat(const char *path, struct stat *buf)
 {
-    int ret = error_inject(path, "lstat");
+    int ret = error_inject(path, OP_LSTAT);
     if (ret) {
         return ret;
     }
@@ -37,7 +87,7 @@ int unreliable_lstat(const char *path, struct stat *buf)
 
 int unreliable_getattr(const char *path, struct stat *buf)
 {
-    int ret = error_inject(path, "getattr");
+    int ret = error_inject(path, OP_GETATTR);
     if (ret) {
         return ret;
     }
@@ -52,7 +102,7 @@ int unreliable_getattr(const char *path, struct stat *buf)
 
 int unreliable_readlink(const char *path, char *buf, size_t bufsiz)
 {
-    int ret = error_inject(path, "readlink");
+    int ret = error_inject(path, OP_READLINK);
     if (ret) {
         return ret;
     }
@@ -68,7 +118,7 @@ int unreliable_readlink(const char *path, char *buf, size_t bufsiz)
 
 int unreliable_mknod(const char *path, mode_t mode, dev_t dev)
 {
-    int ret = error_inject(path, "mknod");
+    int ret = error_inject(path, OP_MKNOD);
     if (ret) {
         return ret;
     }
@@ -83,7 +133,7 @@ int unreliable_mknod(const char *path, mode_t mode, dev_t dev)
 
 int unreliable_mkdir(const char *path, mode_t mode)
 {
-    int ret = error_inject(path, "mkdir");
+    int ret = error_inject(path, OP_MKDIR);
     if (ret) {
         return ret;
     }
@@ -98,7 +148,7 @@ int unreliable_mkdir(const char *path, mode_t mode)
 
 int unreliable_unlink(const char *path)
 {
-    int ret = error_inject(path, "unlink");
+    int ret = error_inject(path, OP_UNLINK);
     if (ret) {
         return ret;
     }
@@ -113,7 +163,7 @@ int unreliable_unlink(const char *path)
 
 int unreliable_rmdir(const char *path)
 {
-    int ret = error_inject(path, "rmdir");
+    int ret = error_inject(path, OP_RMDIR);
     if (ret) {
         return ret;
     }
@@ -128,7 +178,7 @@ int unreliable_rmdir(const char *path)
 
 int unreliable_symlink(const char *target, const char *linkpath)
 {
-    int ret = error_inject(target, "symlink");
+    int ret = error_inject(target, OP_SYMLINK);
     if (ret) {
         return ret;
     }
@@ -143,7 +193,7 @@ int unreliable_symlink(const char *target, const char *linkpath)
 
 int unreliable_rename(const char *oldpath, const char *newpath)
 {
-    int ret = error_inject(oldpath, "rename");
+    int ret = error_inject(oldpath, OP_RENAME);
     if (ret) {
         return ret;
     }
@@ -158,7 +208,7 @@ int unreliable_rename(const char *oldpath, const char *newpath)
 
 int unreliable_link(const char *oldpath, const char *newpath)
 {
-    int ret = error_inject(oldpath, "link");
+    int ret = error_inject(oldpath, OP_LINK);
     if (ret) {
         return ret;
     }
@@ -173,7 +223,7 @@ int unreliable_link(const char *oldpath, const char *newpath)
 
 int unreliable_chmod(const char *path, mode_t mode)
 {
-    int ret = error_inject(path, "chmod");
+    int ret = error_inject(path, OP_CHMOD);
     if (ret) {
         return ret;
     }
@@ -188,7 +238,7 @@ int unreliable_chmod(const char *path, mode_t mode)
 
 int unreliable_chown(const char *path, uid_t owner, gid_t group)
 {
-    int ret = error_inject(path, "chown");
+    int ret = error_inject(path, OP_CHOWN);
     if (ret) {
         return ret;
     }
@@ -203,7 +253,7 @@ int unreliable_chown(const char *path, uid_t owner, gid_t group)
 
 int unreliable_truncate(const char *path, off_t length)
 {
-    int ret = error_inject(path, "truncate");
+    int ret = error_inject(path, OP_TRUNCATE);
     if (ret) {
         return ret;
     }
@@ -218,7 +268,7 @@ int unreliable_truncate(const char *path, off_t length)
 
 int unreliable_open(const char *path, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "open");
+    int ret = error_inject(path, OP_OPEN);
     if (ret) {
         return ret;
     }
@@ -235,7 +285,7 @@ int unreliable_open(const char *path, struct fuse_file_info *fi)
 int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
                     struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "read");
+    int ret = error_inject(path, OP_READ);
     if (ret) {
         return ret;
     }
@@ -267,7 +317,7 @@ int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
 int unreliable_write(const char *path, const char *buf, size_t size,
                      off_t offset, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "write");
+    int ret = error_inject(path, OP_WRITE);
     if (ret) {
         return ret;
     }
@@ -298,7 +348,7 @@ int unreliable_write(const char *path, const char *buf, size_t size,
 
 int unreliable_statfs(const char *path, struct statvfs *buf)
 {
-    int ret = error_inject(path, "statfs");
+    int ret = error_inject(path, OP_STATFS);
     if (ret) {
         return ret;
     }
@@ -313,7 +363,7 @@ int unreliable_statfs(const char *path, struct statvfs *buf)
 
 int unreliable_flush(const char *path, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "flush");
+    int ret = error_inject(path, OP_FLUSH);
     if (ret) {
         return ret;
     }
@@ -328,7 +378,7 @@ int unreliable_flush(const char *path, struct fuse_file_info *fi)
 
 int unreliable_release(const char *path, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "release");
+    int ret = error_inject(path, OP_RELEASE);
     if (ret) {
         return ret;
     }
@@ -343,7 +393,7 @@ int unreliable_release(const char *path, struct fuse_file_info *fi)
 
 int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "fsync");
+    int ret = error_inject(path, OP_FSYNC);
     if (ret) {
         return ret;
     }
@@ -367,7 +417,7 @@ int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 int unreliable_setxattr(const char *path, const char *name,
                         const char *value, size_t size, int flags)
 {
-    int ret = error_inject(path, "setxattr");
+    int ret = error_inject(path, OP_SETXATTR);
     if (ret) {
         return ret;
     }
@@ -387,7 +437,7 @@ int unreliable_setxattr(const char *path, const char *name,
 int unreliable_getxattr(const char *path, const char *name,
                         char *value, size_t size)
 {
-    int ret = error_inject(path, "getxattr");
+    int ret = error_inject(path, OP_GETXATTR);
     if (ret) {
         return ret;
     }
@@ -406,7 +456,7 @@ int unreliable_getxattr(const char *path, const char *name,
 
 int unreliable_listxattr(const char *path, char *list, size_t size)
 {
-    int ret = error_inject(path, "listxattr");
+    int ret = error_inject(path, OP_LISTXATTR);
     if (ret) {
         return ret;
     }
@@ -425,7 +475,7 @@ int unreliable_listxattr(const char *path, char *list, size_t size)
 
 int unreliable_removexattr(const char *path, const char *name)
 {
-    int ret = error_inject(path, "removexattr");
+    int ret = error_inject(path, OP_REMOVEXATTR);
     if (ret) {
         return ret;
     }
@@ -445,7 +495,7 @@ int unreliable_removexattr(const char *path, const char *name)
 
 int unreliable_opendir(const char *path, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "opendir");
+    int ret = error_inject(path, OP_OPENDIR);
     if (ret) {
         return ret;
     }
@@ -463,7 +513,7 @@ int unreliable_opendir(const char *path, struct fuse_file_info *fi)
 int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
                        off_t offset, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "readdir");
+    int ret = error_inject(path, OP_READDIR);
     if (ret) {
         return ret;
     }
@@ -492,7 +542,7 @@ int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
 int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "releasedir");
+    int ret = error_inject(path, OP_RELEASEDIR);
     if (ret) {
         return ret;
     }
@@ -509,7 +559,7 @@ int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
 
 int unreliable_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "fsyncdir");
+    int ret = error_inject(path, OP_FSYNCDIR);
     if (ret) {
         return ret;
     }
@@ -547,7 +597,7 @@ void unreliable_destroy(void *private_data)
 
 int unreliable_access(const char *path, int mode)
 {
-    int ret = error_inject(path, "access");
+    int ret = error_inject(path, OP_ACCESS);
     if (ret) {
         return ret;
     }
@@ -563,7 +613,7 @@ int unreliable_access(const char *path, int mode)
 int unreliable_create(const char *path, mode_t mode,
                       struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "create");
+    int ret = error_inject(path, OP_CREAT);
     if (ret) {
         return ret;
     }
@@ -580,7 +630,7 @@ int unreliable_create(const char *path, mode_t mode,
 int unreliable_ftruncate(const char *path, off_t length,
                          struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "ftruncate");
+    int ret = error_inject(path, OP_FTRUNCATE);
     if (ret) {
         return ret;
     }
@@ -596,7 +646,7 @@ int unreliable_ftruncate(const char *path, off_t length,
 int unreliable_fgetattr(const char *path, struct stat *buf,
                         struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "fgetattr");
+    int ret = error_inject(path, OP_FGETATTR);
     if (ret) {
         return ret;
     }
@@ -612,7 +662,7 @@ int unreliable_fgetattr(const char *path, struct stat *buf,
 int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
                     struct flock *fl)
 {
-    int ret = error_inject(path, "lock");
+    int ret = error_inject(path, OP_LOCK);
     if (ret) {
         return ret;
     }
@@ -630,7 +680,7 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
                      struct fuse_file_info *fi,
                      unsigned int flags, void *data)
 {
-    int ret = error_inject(path, "ioctl");
+    int ret = error_inject(path, OP_IOCTL);
     if (ret) {
         return ret;
     }
@@ -647,7 +697,7 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
 #ifdef HAVE_FLOCK
 int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
 {
-    int ret = error_inject(path, "flock");
+    int ret = error_inject(path, OP_FLOCK);
     if (ret) {
         return ret;
     }
@@ -666,7 +716,7 @@ int unreliable_fallocate(const char *path, int mode,
                          off_t offset, off_t len,
                          struct fuse_file_info *fi)
 {
-    int ret = error_inject(path, "fallocate");
+    int ret = error_inject(path, OP_FALLOCATE);
     if (ret) {
         return ret;
     }
@@ -704,7 +754,7 @@ int unreliable_fallocate(const char *path, int mode,
 #ifdef HAVE_UTIMENSAT
 int unreliable_utimens(const char *path, const struct timespec ts[2])
 {
-    int ret = error_inject(path, "utimens");
+    int ret = error_inject(path, OP_UTIMENS);
     if (ret) {
         return ret;
     }
