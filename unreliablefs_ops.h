@@ -87,7 +87,6 @@ typedef enum {
     OP_READ,
     OP_WRITE,
     OP_STATFS,
-    OP_LSTAT, /* ??? */
     OP_FLUSH,
     OP_RELEASE,
     OP_FSYNC,
@@ -118,6 +117,7 @@ typedef enum {
 #ifdef HAVE_UTIMENSAT
     OP_UTIMENS,
 #endif /* HAVE_UTIMENSAT */
+    OP_LSTAT
 } fuse_op;
 
 extern const char *fuse_op_name[];

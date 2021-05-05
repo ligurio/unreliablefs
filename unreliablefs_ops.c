@@ -35,7 +35,6 @@ const char *fuse_op_name[] = {
     "read",
     "write",
     "statfs",
-    "lstat", /* ??? */
     "flush",
     "release",
     "fsync",
@@ -66,6 +65,7 @@ const char *fuse_op_name[] = {
 #ifdef HAVE_UTIMENSAT
     "utimens",
 #endif /* HAVE_UTIMENSAT */
+    "lstat"
 };
 
 extern int error_inject(const char* path, fuse_op operation);
