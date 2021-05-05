@@ -70,4 +70,56 @@ int unreliable_fallocate(const char *, int, off_t, off_t,
 int unreliable_utimens(const char *path, const struct timespec ts[2]);
 #endif /* HAVE_UTIMENSAT */
 
+typedef enum {
+    OP_GETATTR,
+    OP_READLINK,
+    OP_MKNOD,
+    OP_MKDIR,
+    OP_UNLINK,
+    OP_RMDIR,
+    OP_SYMLINK,
+    OP_RENAME,
+    OP_LINK,
+    OP_CHMOD,
+    OP_CHOWN,
+    OP_TRUNCATE,
+    OP_OPEN,
+    OP_READ,
+    OP_WRITE,
+    OP_STATFS,
+    OP_LSTAT, /* ??? */
+    OP_FLUSH,
+    OP_RELEASE,
+    OP_FSYNC,
+#ifdef HAVE_XATTR
+    OP_SETXATTR,
+    OP_GETXATTR,
+    OP_LISTXATTR,
+    OP_REMOVEXATTR,
+#endif /* HAVE_XATTR */
+    OP_OPENDIR,
+    OP_READDIR,
+    OP_RELEASEDIR,
+    OP_FSYNCDIR,
+    OP_ACCESS,
+    OP_CREAT,
+    OP_FTRUNCATE,
+    OP_FGETATTR,
+    OP_LOCK,
+#if !defined(__OpenBSD__)
+    OP_IOCTL,
+#endif /* __OpenBSD__ */
+#ifdef HAVE_FLOCK
+    OP_FLOCK,
+#endif /* HAVE_FLOCK */
+#ifdef HAVE_FALLOCATE
+    OP_FALLOCATE,
+#endif /* HAVE_FALLOCATE */
+#ifdef HAVE_UTIMENSAT
+    OP_UTIMENS,
+#endif /* HAVE_UTIMENSAT */
+} fuse_op;
+
+extern const char *fuse_op_name[];
+
 #endif /* UNRELIABLEFS_OPS_HH */
