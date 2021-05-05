@@ -15,6 +15,8 @@
 #define MIN_PROBABLITY 0
 #define MAX_PROBABLITY 100
 
+#define ERRNO_NOOP -999
+
 int error_inject(const char* path, char* operation);
 struct err_inj_q *config_init(const char* conf_path);
 void config_delete(struct err_inj_q *config);

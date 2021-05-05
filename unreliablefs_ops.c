@@ -16,6 +16,8 @@
 #define _XOPEN_SOURCE 700
 #endif
 
+#define ERRNO_NOOP -999
+
 #include "unreliablefs_ops.h"
 
 extern int error_inject(const char* path, char* operation);
@@ -23,7 +25,9 @@ extern int error_inject(const char* path, char* operation);
 int unreliable_lstat(const char *path, struct stat *buf)
 {
     int ret = error_inject(path, "lstat");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -38,7 +42,9 @@ int unreliable_lstat(const char *path, struct stat *buf)
 int unreliable_getattr(const char *path, struct stat *buf)
 {
     int ret = error_inject(path, "getattr");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -53,7 +59,9 @@ int unreliable_getattr(const char *path, struct stat *buf)
 int unreliable_readlink(const char *path, char *buf, size_t bufsiz)
 {
     int ret = error_inject(path, "readlink");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -69,7 +77,9 @@ int unreliable_readlink(const char *path, char *buf, size_t bufsiz)
 int unreliable_mknod(const char *path, mode_t mode, dev_t dev)
 {
     int ret = error_inject(path, "mknod");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -84,7 +94,9 @@ int unreliable_mknod(const char *path, mode_t mode, dev_t dev)
 int unreliable_mkdir(const char *path, mode_t mode)
 {
     int ret = error_inject(path, "mkdir");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -99,7 +111,9 @@ int unreliable_mkdir(const char *path, mode_t mode)
 int unreliable_unlink(const char *path)
 {
     int ret = error_inject(path, "unlink");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -114,7 +128,9 @@ int unreliable_unlink(const char *path)
 int unreliable_rmdir(const char *path)
 {
     int ret = error_inject(path, "rmdir");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -129,7 +145,9 @@ int unreliable_rmdir(const char *path)
 int unreliable_symlink(const char *target, const char *linkpath)
 {
     int ret = error_inject(target, "symlink");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -144,7 +162,9 @@ int unreliable_symlink(const char *target, const char *linkpath)
 int unreliable_rename(const char *oldpath, const char *newpath)
 {
     int ret = error_inject(oldpath, "rename");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -159,7 +179,9 @@ int unreliable_rename(const char *oldpath, const char *newpath)
 int unreliable_link(const char *oldpath, const char *newpath)
 {
     int ret = error_inject(oldpath, "link");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -174,7 +196,9 @@ int unreliable_link(const char *oldpath, const char *newpath)
 int unreliable_chmod(const char *path, mode_t mode)
 {
     int ret = error_inject(path, "chmod");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
     
@@ -189,7 +213,9 @@ int unreliable_chmod(const char *path, mode_t mode)
 int unreliable_chown(const char *path, uid_t owner, gid_t group)
 {
     int ret = error_inject(path, "chown");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -204,7 +230,9 @@ int unreliable_chown(const char *path, uid_t owner, gid_t group)
 int unreliable_truncate(const char *path, off_t length)
 {
     int ret = error_inject(path, "truncate");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -219,7 +247,9 @@ int unreliable_truncate(const char *path, off_t length)
 int unreliable_open(const char *path, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "open");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -236,7 +266,9 @@ int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
                     struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "read");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -268,7 +300,9 @@ int unreliable_write(const char *path, const char *buf, size_t size,
                      off_t offset, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "write");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -299,7 +333,9 @@ int unreliable_write(const char *path, const char *buf, size_t size,
 int unreliable_statfs(const char *path, struct statvfs *buf)
 {
     int ret = error_inject(path, "statfs");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -314,7 +350,9 @@ int unreliable_statfs(const char *path, struct statvfs *buf)
 int unreliable_flush(const char *path, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "flush");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -329,7 +367,9 @@ int unreliable_flush(const char *path, struct fuse_file_info *fi)
 int unreliable_release(const char *path, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "release");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -344,7 +384,9 @@ int unreliable_release(const char *path, struct fuse_file_info *fi)
 int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "fsync");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -368,7 +410,9 @@ int unreliable_setxattr(const char *path, const char *name,
                         const char *value, size_t size, int flags)
 {
     int ret = error_inject(path, "setxattr");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -388,7 +432,9 @@ int unreliable_getxattr(const char *path, const char *name,
                         char *value, size_t size)
 {
     int ret = error_inject(path, "getxattr");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -407,7 +453,9 @@ int unreliable_getxattr(const char *path, const char *name,
 int unreliable_listxattr(const char *path, char *list, size_t size)
 {
     int ret = error_inject(path, "listxattr");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -426,7 +474,9 @@ int unreliable_listxattr(const char *path, char *list, size_t size)
 int unreliable_removexattr(const char *path, const char *name)
 {
     int ret = error_inject(path, "removexattr");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -446,7 +496,9 @@ int unreliable_removexattr(const char *path, const char *name)
 int unreliable_opendir(const char *path, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "opendir");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -464,7 +516,9 @@ int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
                        off_t offset, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "readdir");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -493,7 +547,9 @@ int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "releasedir");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -510,7 +566,9 @@ int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
 int unreliable_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "fsyncdir");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -548,7 +606,9 @@ void unreliable_destroy(void *private_data)
 int unreliable_access(const char *path, int mode)
 {
     int ret = error_inject(path, "access");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -564,7 +624,9 @@ int unreliable_create(const char *path, mode_t mode,
                       struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "create");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -581,7 +643,9 @@ int unreliable_ftruncate(const char *path, off_t length,
                          struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "ftruncate");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -597,7 +661,9 @@ int unreliable_fgetattr(const char *path, struct stat *buf,
                         struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "fgetattr");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -613,7 +679,9 @@ int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
                     struct flock *fl)
 {
     int ret = error_inject(path, "lock");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -631,7 +699,9 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
                      unsigned int flags, void *data)
 {
     int ret = error_inject(path, "ioctl");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -648,7 +718,9 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
 int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
 {
     int ret = error_inject(path, "flock");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -667,7 +739,9 @@ int unreliable_fallocate(const char *path, int mode,
                          struct fuse_file_info *fi)
 {
     int ret = error_inject(path, "fallocate");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 
@@ -705,7 +779,9 @@ int unreliable_fallocate(const char *path, int mode,
 int unreliable_utimens(const char *path, const struct timespec ts[2])
 {
     int ret = error_inject(path, "utimens");
-    if (ret) {
+    if (ret == -ERRNO_NOOP) {
+        return 0;
+    } else if (ret) {
         return ret;
     }
 

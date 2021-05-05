@@ -54,7 +54,7 @@ int error_inject(const char* path, char* operation)
         case ERRINJ_NOOP:
             fprintf(stderr, "%s triggered on operation '%s', %s\n",
                             errinj_name[err->type], operation, path);
-            rc = 0;
+            rc = -ERRNO_NOOP;
             break;
         }
     }
