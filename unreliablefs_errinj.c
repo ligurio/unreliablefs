@@ -36,6 +36,12 @@ int error_inject(const char* path, fuse_op operation)
 
     /* apply error injections defined in configuration one by one */
     TAILQ_FOREACH(err, conf.errors, entries) {
+        int p = rand_range(MIN_PROBABLITY, MAX_PROBABLITY);
+        if (!((p >= 0) && (p <= err->probability))) {
+            fprintf(stderr, "errinj '%s' skipped: probability (%d) is not matched\n",
+                            errinj_name[err->type], err->probability);
+            continue;
+        }
 	const char* op_name = fuse_op_name[operation];
 	if (is_regex_matched(err->path_regexp, path) != 0) {
 	    fprintf(stderr, "errinj '%s' skipped: path_regexp (%s) is not matched\n",
@@ -47,12 +53,6 @@ int error_inject(const char* path, fuse_op operation)
                             errinj_name[err->type], err->op_regexp);
 	    continue;
 	}
-        int p = rand_range(MIN_PROBABLITY, MAX_PROBABLITY);
-        if (!((p >= 0) && (p <= err->probability))) {
-            fprintf(stderr, "errinj '%s' skipped: probability (%d) is not matched\n",
-                            errinj_name[err->type], err->probability);
-            continue;
-        }
         fprintf(stdout, "%s triggered on operation '%s', %s\n",
                         errinj_name[err->type], operation, path);
 	switch (err->type) {
