@@ -3,7 +3,7 @@
 [![Build Status](https://api.cirrus-ci.com/github/ligurio/unreliablefs.svg)](https://cirrus-ci.com/github/ligurio/unreliablefs)
 
 is a FUSE-based fault injection filesystem that allows to change
-fault-injections in runtime.
+fault-injections in runtime using simple configuration file.
 
 Supported fault injections are:
 
