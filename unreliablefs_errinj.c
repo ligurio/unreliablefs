@@ -3,22 +3,169 @@
 #include <fuse.h>
 #include <libgen.h> /* basename() and dirname() */
 #include <regex.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/types.h>
 #include <sys/queue.h>
 
 #include "conf.h"
 #include "unreliablefs.h"
 #include "unreliablefs_errinj.h"
 
+static int rand_range(int, int);
+int error_inject(const char* path, fuse_op operation);
+
+/* GCC is awesome. */
+#define ARRAY_SIZE(arr) \
+        (sizeof(arr) / sizeof((arr)[0]) \
+         + sizeof(typeof(int[1 - 2 * \
+               !!__builtin_types_compatible_p(typeof(arr), \
+                     typeof(&arr[0]))])) * 0)
+
+#define RANDOM_ELEMENT(arr) \
+        (arr[rand_range(0, ARRAY_SIZE(arr))])
+
+static int op_random_errno(int op_n)
+{
+    int rc = -1;
+    switch (op_n) {
+    case OP_LSTAT:
+        rc = RANDOM_ELEMENT(errno_lstat);
+        break;
+    case OP_GETATTR:
+        rc = RANDOM_ELEMENT(errno_lstat);
+        break;
+    case OP_READLINK:
+        rc = RANDOM_ELEMENT(errno_readlink);
+        break;
+    case OP_MKNOD:
+        rc = RANDOM_ELEMENT(errno_mknod);
+        break;
+    case OP_MKDIR:
+        rc = RANDOM_ELEMENT(errno_mkdir);
+        break;
+    case OP_UNLINK:
+        rc = RANDOM_ELEMENT(errno_unlink);
+        break;
+    case OP_RMDIR:
+        rc = RANDOM_ELEMENT(errno_rmdir);
+        break;
+    case OP_SYMLINK:
+        rc = RANDOM_ELEMENT(errno_symlink);
+        break;
+    case OP_RENAME:
+        rc = RANDOM_ELEMENT(errno_rename);
+        break;
+    case OP_LINK:
+        rc = RANDOM_ELEMENT(errno_link);
+        break;
+    case OP_CHMOD:
+        rc = RANDOM_ELEMENT(errno_chmod);
+        break;
+    case OP_CHOWN:
+        rc = RANDOM_ELEMENT(errno_chmod);
+        break;
+    case OP_TRUNCATE:
+        rc = RANDOM_ELEMENT(errno_truncate);
+        break;
+    case OP_OPEN:
+        rc = RANDOM_ELEMENT(errno_creat);
+        break;
+    case OP_READ:
+        rc = RANDOM_ELEMENT(errno_read);
+        break;
+    case OP_WRITE:
+        rc = RANDOM_ELEMENT(errno_write);
+        break;
+    case OP_STATFS:
+        rc = RANDOM_ELEMENT(errno_statfs);
+        break;
+    case OP_FLUSH:
+        rc = RANDOM_ELEMENT(errno_close);
+        break;
+    case OP_RELEASE:
+        rc = RANDOM_ELEMENT(errno_close);
+        break;
+    case OP_FSYNC:
+        rc = RANDOM_ELEMENT(errno_fsync);
+        break;
+#ifdef HAVE_XATTR
+    case OP_SETXATTR:
+        rc = RANDOM_ELEMENT(errno_setxattr);
+        break;
+    case OP_GETXATTR:
+        rc = RANDOM_ELEMENT(errno_getxattr);
+        break;
+    case OP_LISTXATTR:
+        rc = RANDOM_ELEMENT(errno_listxattr);
+        break;
+    case OP_REMOVEXATTR:
+        rc = RANDOM_ELEMENT(errno_removexattr);
+        break;
+#endif /* HAVE_XATTR */
+    case OP_OPENDIR:
+        rc = RANDOM_ELEMENT(errno_opendir);
+        break;
+    case OP_READDIR:
+        rc = RANDOM_ELEMENT(errno_readdir);
+        break;
+    case OP_RELEASEDIR:
+        rc = RANDOM_ELEMENT(errno_close);
+        break;
+    case OP_FSYNCDIR:
+        rc = RANDOM_ELEMENT(errno_fsync);
+        break;
+    case OP_ACCESS:
+        rc = RANDOM_ELEMENT(errno_access);
+        break;
+    case OP_CREAT:
+        rc = RANDOM_ELEMENT(errno_creat);
+        break;
+    case OP_FTRUNCATE:
+        rc = RANDOM_ELEMENT(errno_ftruncate);
+        break;
+    case OP_FGETATTR:
+        rc = RANDOM_ELEMENT(errno_lstat);
+        break;
+    case OP_LOCK:
+        rc = RANDOM_ELEMENT(errno_fcntl);
+        break;
+#if !defined(__OpenBSD__)
+    case OP_IOCTL:
+        rc = RANDOM_ELEMENT(errno_ioctl);
+        break;
+#endif /* __OpenBSD__ */
+#ifdef HAVE_FLOCK
+    case OP_FLOCK:
+        rc = RANDOM_ELEMENT(errno_flock);
+        break;
+#endif /* HAVE_FLOCK */
+#ifdef HAVE_FALLOCATE
+    case OP_FALLOCATE:
+        rc = RANDOM_ELEMENT(errno_fallocate);
+        break;
+#endif /* HAVE_FALLOCATE */
+#ifdef HAVE_UTIMENSAT
+    case OP_UTIMENS:
+        rc = RANDOM_ELEMENT(errno_utimensat);
+        break;
+#endif /* HAVE_UTIMENSAT */
+    default:
+        fprintf(stderr, "Unsupported operation (%s)\n", fuse_op_name[op_n]);
+    }
+
+    return rc;
+}
+
 static int rand_range(int min_n, int max_n)
 {
     return rand() % (max_n - min_n + 1) + min_n;
 }
 
-int error_inject(const char* path, char* operation)
+int error_inject(const char* path, fuse_op operation)
 {
     int rc = -0;
     struct errinj_conf *err;
@@ -34,27 +181,43 @@ int error_inject(const char* path, char* operation)
 
     /* apply error injections defined in configuration one by one */
     TAILQ_FOREACH(err, conf.errors, entries) {
-	if (is_regex_matched(err->path_regexp, path) != 0) {
-	    fprintf(stderr, "errinj '%s' skipped: path_regexp (%s) is not matched\n",
-                            errinj_name[err->type], err->path_regexp);
-	    continue;
-	}
-	if (is_regex_matched(err->op_regexp, operation) != 0) {
-	    fprintf(stderr, "errinj '%s' skipped: op_regexp (%s) is not matched\n",
-                            errinj_name[err->type], err->op_regexp);
-	    continue;
-	}
         int p = rand_range(MIN_PROBABLITY, MAX_PROBABLITY);
         if (!((p >= 0) && (p <= err->probability))) {
             fprintf(stderr, "errinj '%s' skipped: probability (%d) is not matched\n",
                             errinj_name[err->type], err->probability);
             continue;
         }
+	const char* op_name = fuse_op_name[operation];
+	if (is_regex_matched(err->path_regexp, path) != 0) {
+	    fprintf(stderr, "errinj '%s' skipped: path_regexp (%s) is not matched\n",
+                            errinj_name[err->type], err->path_regexp);
+	    continue;
+	}
+	if (is_regex_matched(err->op_regexp, op_name) != 0) {
+	    fprintf(stderr, "errinj '%s' skipped: op_regexp (%s) is not matched\n",
+                            errinj_name[err->type], err->op_regexp);
+	    continue;
+	}
+        fprintf(stdout, "%s triggered on operation '%s', %s\n",
+                        errinj_name[err->type], op_name, path);
 	switch (err->type) {
         case ERRINJ_NOOP:
-            fprintf(stderr, "%s triggered on operation '%s', %s\n",
-                            errinj_name[err->type], operation, path);
-            rc = 0;
+            rc = 1;
+            break;
+        case ERRINJ_KILL_CALLER: ;
+            struct fuse_context *cxt = fuse_get_context();
+            if (cxt) {
+                int ret = kill(cxt->pid, DEFAULT_SIGNAL_NAME);
+                if (ret == -1) {
+                    perror("kill");
+                }
+                fprintf(stdout, "send signal %s to TID %d\n",
+                                strsignal(DEFAULT_SIGNAL_NAME), cxt->pid);
+            }
+            break;
+        case ERRINJ_ERRNO:
+            rc = op_random_errno(operation);
+            fprintf(stdout, "errno %s\n", strerror(rc));
             break;
         }
     }
