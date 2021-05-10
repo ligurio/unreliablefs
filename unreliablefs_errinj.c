@@ -27,6 +27,7 @@ int error_inject(const char* path, char* operation)
     if (strcmp(path, conf.config_path) == 0) {
         config_delete(conf.errors);
         conf.errors = config_init(path);
+        goto cleanup;
     }
     if (!conf.errors) {
         goto cleanup;
