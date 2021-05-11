@@ -39,7 +39,7 @@ struct errinj_conf {
     char *err_injection_name;
     char *op_regexp;
     char *path_regexp;
-    int probability;
+    unsigned int probability;
     errinj_type type;
 
     TAILQ_ENTRY(errinj_conf) entries;

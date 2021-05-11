@@ -44,8 +44,8 @@ int error_inject(const char* path, char* operation)
                             errinj_name[err->type], err->op_regexp);
 	    continue;
 	}
-        int p = rand_range(MIN_PROBABLITY, MAX_PROBABLITY);
-        if (!((p >= 0) && (p <= err->probability))) {
+        unsigned int p = rand_range(MIN_PROBABLITY, MAX_PROBABLITY);
+        if (!(p <= err->probability)) {
             fprintf(stderr, "errinj '%s' skipped: probability (%d) is not matched\n",
                             errinj_name[err->type], err->probability);
             continue;
