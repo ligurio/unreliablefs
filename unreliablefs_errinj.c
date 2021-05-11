@@ -161,7 +161,8 @@ int is_regex_matched(const char *regex, const char *string) {
         return 0;
     regex_t reg;
     regmatch_t match[1];
-    int rc = regcomp(&reg, regex, REG_ICASE | REG_EXTENDED);
+    int rc = 0;
+    rc = regcomp(&reg, regex, REG_ICASE | REG_EXTENDED);
     if (rc != 0) {
         perror("regcomp");
         regfree(&reg);
