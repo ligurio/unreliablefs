@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2020 Sergey Bronnikov
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    div.Pp { margin: 1ex 0ex; }
+    div.Nd, div.Bf, div.Op { display: inline; }
+    span.Pa, span.Ad { font-style: italic; }
+    span.Ms { font-weight: bold; }
+    dl.Bl-diag > dt { font-weight: bold; }
+    code.Nm, code.Fl, code.Cm, code.Ic, code.In, code.Fd, code.Fn,
+    code.Cd { font-weight: bold; font-family: inherit; }
+  </style>
+  <title>UNRELIABLEFS(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">UNRELIABLEFS(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">UNRELIABLEFS(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<code class="Nm" title="Nm">unreliablefs</code> &#x2014;
+<div class="Nd" title="Nd">a FUSE-based fault-injecting filesystem</div>
+<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm" title="Nm">unreliablefs</code></td>
+    <td>mountpoint [<div class="Op"><code class="Fl" title="Fl">-basedir</code>
+      <var class="Ar" title="Ar">path</var></div>]
+      [<div class="Op"><code class="Fl" title="Fl">-seed</code>
+      <var class="Ar" title="Ar">number</var></div>]
+      [<div class="Op"><code class="Fl" title="Fl">-hvdf</code></div>]</td>
+  </tr>
+</table>
+<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The <code class="Nm" title="Nm">unreliablefs</code> is a filesystem that allows
+  to inject errors on file operations. Without configuration it works as
+  pass-through filesystem and redirects file operations to a file objects on a
+  real filesystem.
+<div class="Pp"></div>
+<code class="Nm" title="Nm">unreliablefs</code> uses Filesystem in Userspace
+  (FUSE) that allows easy setup without requiring a kernel recompile or new
+  kernel modules. Without any other configuration, any files in a mounted
+  directory will be available unchanged. To mount filesystem it is required to
+  specify mountpoint and after mount it will contain the same file tree as a
+  root filesystem.
+<div class="Pp"></div>
+The options are as follows:
+<dl class="Bl-tag">
+  <dt><a class="permalink" href="#basedir"><code class="Fl" title="Fl" id="basedir">-basedir</code></a>
+    <var class="Ar" title="Ar">path</var></dt>
+  <dd>Specify path to a directory that should be mount.</dd>
+  <dt><a class="permalink" href="#seed"><code class="Fl" title="Fl" id="seed">-seed</code></a>
+    <var class="Ar" title="Ar">number</var></dt>
+  <dd>Specify a seed.</dd>
+  <dt><a class="permalink" href="#f"><code class="Fl" title="Fl" id="f">-f</code></a></dt>
+  <dd>Do not daemonize.</dd>
+  <dt><a class="permalink" href="#d"><code class="Fl" title="Fl" id="d">-d</code></a></dt>
+  <dd>Do not daemonize. If this option is specified,
+      <code class="Nm" title="Nm">unreliablefs</code> will run in the foreground
+      and log to <i class="Em" title="Em">stderr</i>.</dd>
+  <dt><a class="permalink" href="#v"><code class="Fl" title="Fl" id="v">-v</code></a></dt>
+  <dd>Show version.</dd>
+  <dt><a class="permalink" href="#h"><code class="Fl" title="Fl" id="h">-h</code></a></dt>
+  <dd>Show usage.</dd>
+</dl>
+<div class="Pp"></div>
+Supported file operations are: <a class="Xr" title="Xr">access(2)</a>,
+  <a class="Xr" title="Xr">chmod(2)</a>, <a class="Xr" title="Xr">chown(2)</a>,
+  <a class="Xr" title="Xr">creat(2)</a>,
+  <a class="Xr" title="Xr">fallocate(2)</a>,
+  <a class="Xr" title="Xr">flock(2)</a>, <a class="Xr" title="Xr">fsync(2)</a>,
+  <a class="Xr" title="Xr">ftruncate(2)</a>,
+  <a class="Xr" title="Xr">getxattr(2)</a>,
+  <a class="Xr" title="Xr">ioctl(2)</a>, <a class="Xr" title="Xr">link(2)</a>,
+  <a class="Xr" title="Xr">listxattr(2)</a>,
+  <a class="Xr" title="Xr">lock(2)</a>, <a class="Xr" title="Xr">lstat(2)</a>,
+  <a class="Xr" title="Xr">mkdir(2)</a>, <a class="Xr" title="Xr">mknod(2)</a>,
+  <a class="Xr" title="Xr">open(2)</a>, <a class="Xr" title="Xr">read(2)</a>,
+  <a class="Xr" title="Xr">readdir(2)</a>,
+  <a class="Xr" title="Xr">readlink(2)</a>,
+  <a class="Xr" title="Xr">removexattr(2)</a>,
+  <a class="Xr" title="Xr">rename(2)</a>, <a class="Xr" title="Xr">rmdir(2)</a>,
+  <a class="Xr" title="Xr">setxattr(2)</a>,
+  <a class="Xr" title="Xr">statfs(2)</a>,
+  <a class="Xr" title="Xr">symlink(2)</a>,
+  <a class="Xr" title="Xr">truncate(2)</a>,
+  <a class="Xr" title="Xr">unlink(2)</a>,
+  <a class="Xr" title="Xr">utimensat(2)</a>,
+  <a class="Xr" title="Xr">write(2)</a>.
+<div class="Pp"></div>
+Following functions are unsupported on OpenBSD:
+  <a class="Xr" title="Xr">removexattr(2)</a>,
+  <a class="Xr" title="Xr">setxattr(2)</a>,
+  <a class="Xr" title="Xr">getxattr(2)</a>,
+  <a class="Xr" title="Xr">listxattr(2)</a>,
+  <a class="Xr" title="Xr">flock(2)</a>,
+  <a class="Xr" title="Xr">fallocate(2)</a>.
+<h1 class="Sh" title="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+  STATUS</a></h1>
+The <code class="Nm" title="Nm">unreliablefs</code> utility exits&#x00A0;0 on
+  success, and&#x00A0;&gt;0 if an error occurs.
+<h1 class="Sh" title="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<div class="Bd">
+<pre class="Li">
+
+$ mkdir /tmp/fs 
+$ unreliablefs /tmp/fs -basedir=/tmp -seed=1618680646 
+$ cat &lt;&lt; EOF &gt; /tmp/fs/unreliablefs.conf 
+[errinj_noop] 
+op_regexp = .* 
+path_regexp = .* 
+probability = 30 
+EOF 
+$ ls -la 
+$ umount /tmp/fs 
+
+</pre>
+</div>
+<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<a class="Xr" title="Xr">fusermount(1)</a>,
+  <a class="Xr" title="Xr">errno(2)</a>, <a class="Xr" title="Xr">fuse(4)</a>,
+  <a class="Xr" title="Xr">fuse(8)</a>,
+  <a class="Xr" title="Xr">unreliablefs.conf(5)</a>,
+  <a class="Xr" title="Xr">mount.fuse(8)</a>
+<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+The <code class="Nm" title="Nm">unreliablefs</code> utility was written by
+  <span class="An" title="An">Sergey</span>
+  <span class="An" title="An">Bronnikov</span>.
+<h1 class="Sh" title="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
+Faults can be injected before a start of a file operation, and cannot be
+  injected say in a middle of file operation. So if a file operation has been
+  successfully started then <code class="Nm" title="Nm">unreliablefs</code> will
+  not affect it and final result entirely depends on a base filesystem and
+  application that started file operation.</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 3, 2020</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>
