@@ -219,6 +219,16 @@ int error_inject(const char* path, fuse_op operation)
             fprintf(stdout, "errno '%s'\n", strerror(rc));
             rc = -rc;
             break;
+        case ERRINJ_SLOWDOWN: ;
+	    struct timespec ts = {};
+	    ts.tv_nsec = err->duration;
+            fprintf(stdout, "start of '%s' slowdown for '%d' ns\n", op_name, err->duration);
+            if (nanosleep(&ts, NULL) != 0) {
+		perror("nanosleep");
+            } else {
+		fprintf(stdout, "end of '%s' slowdown with '%d' ns\n", op_name, err->duration);
+            }
+            break;
         }
     }
 
@@ -315,6 +325,8 @@ int conf_option_handler(void* cfg, const char* section,
         err->op_regexp = strdup(value);
     } else if (strcmp(key, "probability") == 0) {
         err->probability = atoi(value);
+    } else if (strcmp(key, "duration") == 0) {
+        err->duration = atoi(value);
     } else {
         fprintf(stderr, "unknown option '%s' in configuration file\n", key);
         return 0;

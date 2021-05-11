@@ -34,6 +34,8 @@ Send SIGKILL signal to a process that invoked file operation.
 Set random errno.
 .Xr errno 2
 limited by supported errno's.
+.It Cm errinj_slowdown
+File operation slowdown for nanoseconds specified by duration parameter.
 .El
 .Pp
 The options are:
@@ -52,6 +54,8 @@ POSIX Extended Regular Expression syntax is supported and regular expressions do
 Sets the probability in percents.
 Probability equal to 0 means that error injection will never happen.
 Probability equal to 100 means that error injection will happen on each file operation.
+.It Cm duration
+Sets the duration of file operation slowdown. Applicable to errinj_slowdown only.
 .El
 .Sh EXAMPLES
 .Bd -literal

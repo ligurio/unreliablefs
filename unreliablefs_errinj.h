@@ -36,12 +36,14 @@ const char *errinj_name[] =
     "errinj_errno",
     "errinj_kill_caller",
     "errinj_noop",
+    "errinj_slowdown",
 };
 
 typedef enum {
     ERRINJ_ERRNO,
     ERRINJ_KILL_CALLER,
     ERRINJ_NOOP,
+    ERRINJ_SLOWDOWN,
 } errinj_type;
 
 typedef struct errinj_conf errinj_conf;
@@ -52,6 +54,7 @@ struct errinj_conf {
     char *path_regexp;
     char *errno_regexp;
     unsigned int probability;
+    unsigned int duration;
     errinj_type type;
 
     TAILQ_ENTRY(errinj_conf) entries;
