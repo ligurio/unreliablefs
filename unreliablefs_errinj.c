@@ -66,14 +66,14 @@ cleanup:
 
 static errinj_type errinj_type_by_name(const char *name)
 {
-    int idx = 0;
+    int idx = -1;
     int n_elem = sizeof(errinj_name)/sizeof(errinj_name[0]);
     for (int i = 0; i < n_elem; i++) {
         if (strcmp(errinj_name[i], name) == 0)
             idx = i;
     }
 
-    return (errinj_type)idx;
+    return idx;
 }
 
 struct err_inj_q *config_init(const char* conf_path) {
@@ -115,11 +115,15 @@ int conf_option_handler(void* cfg, const char* section,
                         const char* key, const char* value)
 {
     errinj_conf *err = NULL;
-    errinj_type cur_type = errinj_type_by_name(section);
+    int cur_type = errinj_type_by_name(section);
+    if (cur_type == -1) {
+        fprintf(stderr, "unsupported error injection type '%s'", section);
+        return -1;
+    }
     errinj_conf *np;
     int is_errinj_found = 0;
     TAILQ_FOREACH(np, (struct err_inj_q *)cfg, entries) {
-        if (np->type == cur_type) {
+        if (np->type == (errinj_type)cur_type) {
             err = np;
             is_errinj_found = 1;
             break;
