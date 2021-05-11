@@ -5,18 +5,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    div.Pp { margin: 1ex 0ex; }
-    div.Nd, div.Bf, div.Op { display: inline; }
-    span.Pa, span.Ad { font-style: italic; }
-    span.Ms { font-weight: bold; }
-    dl.Bl-diag > dt { font-weight: bold; }
-    code.Nm, code.Fl, code.Cm, code.Ic, code.In, code.Fd, code.Fn,
-    code.Cd { font-weight: bold; font-family: inherit; }
-  </style>
+  <link rel="stylesheet" href="/mandoc.css" type="text/css" media="all"/>
   <title>UNRELIABLEFS.CONF(5)</title>
 </head>
 <body>
@@ -47,33 +36,55 @@ Per-fault-injection customizable variables are specified within sections with
 <div class="Pp"></div>
 Supported fault injections are:
 <dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
   <dt><a class="permalink" href="#errinj_noop"><code class="Cm" title="Cm" id="errinj_noop">errinj_noop</code></a></dt>
   <dd>File operation replaced with no-op.</dd>
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
   <dt><a class="permalink" href="#errinj_kill_caller"><code class="Cm" title="Cm" id="errinj_kill_caller">errinj_kill_caller</code></a></dt>
   <dd>Send SIGKILL signal to a process that invoked file operation.</dd>
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
   <dt><a class="permalink" href="#errinj_errno"><code class="Cm" title="Cm" id="errinj_errno">errinj_errno</code></a></dt>
   <dd>Set random errno. <a class="Xr" title="Xr">errno(2)</a> limited by
       supported errno's.</dd>
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt><a class="permalink" href="#errinj_slowdown"><code class="Cm" title="Cm" id="errinj_slowdown">errinj_slowdown</code></a></dt>
+  <dd>File operation slowdown for nanoseconds specified by duration
+    parameter.</dd>
 </dl>
 <div class="Pp"></div>
 The options are:
 <dl class="Bl-tag">
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
   <dt><a class="permalink" href="#op_regexp"><code class="Cm" title="Cm" id="op_regexp">op_regexp</code></a></dt>
   <dd>Sets the regular expression that matches file operation for what fault
       injection is applicable. Option uses format of regular expressions
       described in <a class="Xr" title="Xr">re_format(7)</a>. POSIX Extended
       Regular Expression syntax is supported and regular expressions do not
       differentiate case.</dd>
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
   <dt><a class="permalink" href="#path_regexp"><code class="Cm" title="Cm" id="path_regexp">path_regexp</code></a></dt>
   <dd>Sets the regular expression that matches paths where fault injection is
       applicable. Option uses format of regular expressions described in
       <a class="Xr" title="Xr">re_format(7)</a>. POSIX Extended Regular
       Expression syntax is supported and regular expressions do not
       differentiate case.</dd>
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
   <dt><a class="permalink" href="#probability"><code class="Cm" title="Cm" id="probability">probability</code></a></dt>
   <dd>Sets the probability in percents. Probability equal to 0 means that error
       injection will never happen. Probability equal to 100 means that error
       injection will happen on each file operation.</dd>
+  <dt>&#x00A0;</dt>
+  <dd>&#x00A0;</dd>
+  <dt><a class="permalink" href="#duration"><code class="Cm" title="Cm" id="duration">duration</code></a></dt>
+  <dd>Sets the duration of file operation slowdown. Applicable to
+      errinj_slowdown only.</dd>
 </dl>
 <h1 class="Sh" title="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <div class="Bd">
