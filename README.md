@@ -29,6 +29,10 @@ $ mkdir build && cd build
 $ cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j
 ```
 
+### Packages
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/fusefs:unreliablefs.svg)](https://repology.org/project/fusefs:unreliablefs/versions)
+
 ### Using
 
 ```sh
