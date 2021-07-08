@@ -5,6 +5,18 @@ include(CheckFunctionExists)
 project (unreliablefs
          DESCRIPTION "A FUSE-based fault injection filesystem.")
 
+if(${CMAKE_VERSION} VERSION_GREATER "3.12.0")
+    find_package(Python3 COMPONENTS Interpreter)
+    find_package(Python COMPONENTS Interpreter)
+endif()
+
+set(PYTHON_PATH "/usr/bin/python3.6")
+if(${Python3_FOUND})
+    set(PYTHON_PATH ${Python3_EXECUTABLE})
+elseif(${Python_FOUND})
+    set(PYTHON_PATH ${Python_EXECUTABLE})
+endif()
+
 set(UNRELIABLEFS_SRC conf.c
 		unreliablefs.c
 		unreliablefs_errinj.c
@@ -52,10 +64,11 @@ if(ENABLE_UBSAN)
     target_link_options(${PROJECT_NAME} PUBLIC -fsanitize=undefined)
 endif()
 
-enable_testing()
 add_subdirectory(tests)
-add_test(NAME pytest COMMAND pytest -c ${PROJECT_SOURCE_DIR}/tests/pytest.ini ${PROJECT_SOURCE_DIR}/tests/
-         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+add_custom_target(pytest
+    COMMAND ${PYTHON_PATH} -m pytest -c ${PROJECT_SOURCE_DIR}/tests/pytest.ini ${PROJECT_SOURCE_DIR}/tests/
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    COMMENT "Run regression test suite")
 
 set(MANUAL_PAGES "unreliablefs.1;unreliablefs.conf.5")
 add_custom_target(check DEPENDS check-mandoc)
