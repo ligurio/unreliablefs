@@ -15,6 +15,4 @@ typedef struct unreliablefs_config {
      pthread_mutex_t   mutex;
 } unreliablefs_config;
 
-struct unreliablefs_config conf;
-
 #endif /* UNRELIABLEFS_HH */
