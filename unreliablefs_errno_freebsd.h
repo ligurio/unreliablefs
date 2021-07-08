@@ -1,12 +1,15 @@
 #ifndef ERRNO_HH
 #define ERRNO_HH
 
+#include <sys/param.h>
 #include <errno.h>
 
 static const int errno_access[] = {
     EACCES,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     ELOOP,
@@ -21,7 +24,9 @@ static const int errno_chmod[] = {
     EACCES,
     EFAULT,
     EFTYPE,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EIO,
     ELOOP,
     ENAMETOOLONG,
@@ -39,7 +44,9 @@ static const int errno_creat[] = {
     EDQUOT,
     EEXIST,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINTR,
     EINVAL,
     EIO,
@@ -66,7 +73,9 @@ static const int errno_ftruncate[] = {
     EBADF,
     EFAULT,
     EFBIG,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     EISDIR,
@@ -85,7 +94,9 @@ static const int errno_link[] = {
     EDQUOT,
     EEXIST,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     ELOOP,
@@ -106,7 +117,9 @@ static const int errno_mkdir[] = {
     EDQUOT,
     EEXIST,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EIO,
     ELOOP,
     EMLINK,
@@ -124,7 +137,9 @@ static const int errno_mknod[] = {
     EDQUOT,
     EEXIST,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     ELOOP,
@@ -147,7 +162,9 @@ static const int errno_opendir[] = {
 static const int errno_readdir[] = {
     EBADF,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
 };
@@ -158,7 +175,9 @@ static const int errno_read[] = {
     EBUSY,
     ECONNRESET,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINTR,
     EINVAL,
     EIO,
@@ -170,7 +189,9 @@ static const int errno_read[] = {
 static const int errno_readlink[] = {
     EACCES,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     ELOOP,
@@ -184,7 +205,9 @@ static const int errno_rename[] = {
     ECAPMODE,
     EDQUOT,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     EISDIR,
@@ -203,7 +226,9 @@ static const int errno_rmdir[] = {
     EACCES,
     EBUSY,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     ELOOP,
@@ -220,7 +245,9 @@ static const int errno_symlink[] = {
     EDQUOT,
     EEXIST,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EIO,
     ELOOP,
     ENAMETOOLONG,
@@ -235,7 +262,9 @@ static const int errno_truncate[] = {
     EACCES,
     EFAULT,
     EFBIG,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     EISDIR,
@@ -251,7 +280,9 @@ static const int errno_truncate[] = {
 static const int errno_unlink[] = {
     EACCES,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EIO,
     EISDIR,
     ELOOP,
@@ -269,7 +300,9 @@ static const int errno_write[] = {
     EDQUOT,
     EFAULT,
     EFBIG,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINTR,
     EINVAL,
     EIO,
@@ -281,7 +314,9 @@ static const int errno_write[] = {
 static const int errno_lstat[] = {
     EACCES,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EIO,
     ELOOP,
     ENAMETOOLONG,
@@ -293,7 +328,9 @@ static const int errno_lstat[] = {
 static const int errno_statfs[] = {
     EACCES,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EIO,
     ELOOP,
     ENAMETOOLONG,
@@ -312,7 +349,9 @@ static const int errno_utimensat[] = {
     EACCES,
     EBADF,
     EFAULT,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
     ELOOP,
@@ -326,7 +365,9 @@ static const int errno_utimensat[] = {
 
 static const int errno_fsync[] = {
     EBADF,
+#if __FreeBSD__ >= 12
     EINTEGRITY,
+#endif
     EINVAL,
     EIO,
 };
