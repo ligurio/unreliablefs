@@ -18,6 +18,8 @@
 static int rand_range(int, int);
 int error_inject(const char* path, fuse_op operation);
 
+extern struct unreliablefs_config conf;
+
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #define RANDOM_ELEMENT(arr) \
