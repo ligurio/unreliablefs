@@ -23,7 +23,11 @@ from util import (wait_for_mount, umount, cleanup, base_cmdline,
                   basename, fuse_test_marker, safe_sleep)
 from os.path import join as pjoin
 
-OS_WO_XATTR_SUPPORT = ['openbsd', 'freebsd12']
+def is_no_xattr_support():
+    return sys.platform.startswith("freebsd") or \
+            sys.platform == "openbsd"
+
+no_xattr_support = is_no_xattr_support()
 
 TEST_FILE = __file__
 
@@ -182,7 +186,7 @@ def test_open_write(setup_unreliablefs):
     with open(fullname, 'rb') as fh:
         assert fh.read() == content
 
-@pytest.mark.xfail(sys.platform == "freebsd12", reason="gh-44")
+@pytest.mark.xfail(sys.platform.startswith("freebsd"), reason="gh-44")
 def test_append(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
@@ -196,7 +200,7 @@ def test_append(setup_unreliablefs):
     with open(fullname, 'rb') as fh:
         assert fh.read() == b'foo\nbar\n'
 
-@pytest.mark.xfail(sys.platform == "freebsd12", reason="gh-42")
+@pytest.mark.xfail(sys.platform.startswith("freebsd"), reason="gh-42")
 def test_seek(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
@@ -397,7 +401,7 @@ def test_passthrough(setup_unreliablefs):
     assert name in os.listdir(mnt_dir)
     assert os.stat(src_name) == os.stat(mnt_name)
 
-@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.skipif(no_xattr_support, reason="no xattr support")
 @pytest.mark.parametrize("symlink", (False, True))
 def test_listxattr(setup_unreliablefs, symlink):
     mnt_dir, src_dir = setup_unreliablefs
@@ -425,7 +429,7 @@ def test_listxattr(setup_unreliablefs, symlink):
     assert attr2_name.decode("utf-8") in os.listxattr(target)
     assert num_attrs + 2 == len(os.listxattr(target))
 
-@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.skipif(no_xattr_support, reason="no xattr support")
 @pytest.mark.parametrize("symlink",
     (False,
      pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
@@ -453,7 +457,7 @@ def test_getxattr(setup_unreliablefs, symlink):
     os.setxattr(target, attr_name, b"hello")
     assert os.getxattr(target, attr_name) == b"hello"
 
-@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.skipif(no_xattr_support, reason="no xattr support")
 @pytest.mark.parametrize("symlink", (False, True))
 def test_setxattr(setup_unreliablefs, symlink):
     mnt_dir, src_dir = setup_unreliablefs
@@ -475,7 +479,7 @@ def test_setxattr(setup_unreliablefs, symlink):
     os.setxattr(target, attr_name, attr_value)
     assert attr_name.decode("utf-8") in os.listxattr(target)
 
-@pytest.mark.skipif(sys.platform in OS_WO_XATTR_SUPPORT, reason="no xattr support")
+@pytest.mark.skipif(no_xattr_support, reason="no xattr support")
 @pytest.mark.parametrize("symlink",
     (pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
      pytest.param(False, marks=pytest.mark.xfail(reason="gh-50")),
