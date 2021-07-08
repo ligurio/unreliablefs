@@ -10,7 +10,11 @@ from os.path import join as pjoin
 
 basename = pjoin(os.path.dirname(__file__), '..')
 
-platforms_wo_fusermount = ['freebsd12', 'darwin']
+def is_no_fusermount():
+    return sys.platform.startswith("freebsd") or \
+            sys.platform == "darwin"
+
+no_fusermount_support = not is_no_fusermount()
 
 def wait_for_mount(mount_process, mnt_dir,
                    test_fn=os.path.ismount):
@@ -25,7 +29,7 @@ def wait_for_mount(mount_process, mnt_dir,
     pytest.fail("mountpoint failed to come up")
 
 def cleanup(mount_process, mnt_dir):
-    if sys.platform in platforms_wo_fusermount:
+    if no_fusermount_support:
         subprocess.call(['umount', mnt_dir],
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.STDOUT)
@@ -40,7 +44,7 @@ def cleanup(mount_process, mnt_dir):
         mount_process.kill()
 
 def umount(mount_process, mnt_dir):
-    if sys.platform in platforms_wo_fusermount:
+    if no_fusermount_support:
         subprocess.check_call(['umount', mnt_dir])
     else:
         subprocess.check_call(['fusermount', '-u', '-z', mnt_dir])
@@ -83,7 +87,7 @@ def fuse_test_marker():
 
     skip = lambda x: pytest.mark.skip(reason=x)
 
-    if sys.platform not in platforms_wo_fusermount:
+    if not no_fusermount_support:
         which = subprocess.Popen(['which', 'fusermount'], stdout=subprocess.PIPE, universal_newlines=True)
         fusermount_path = which.communicate()[0].strip()
 
