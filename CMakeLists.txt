@@ -71,9 +71,19 @@ add_custom_target(pytest
     COMMENT "Run regression test suite")
 
 set(MANUAL_PAGES "unreliablefs.1;unreliablefs.conf.5")
-add_custom_target(check DEPENDS check-mandoc)
+add_custom_target(check DEPENDS check-mandoc check-rockspec)
 add_custom_target(check-mandoc DEPENDS ${MANUAL_PAGES})
 add_custom_command(TARGET check-mandoc
                    COMMAND mandoc -T lint -W warning,stop ${MANUAL_PAGES}
                    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                    COMMENT "Run mandoc static analysis")
+
+set(ROCKSPEC "unreliablefs-scm-1.rockspec")
+add_custom_target(check-rockspec DEPENDS ${ROCKSPEC})
+add_custom_command(TARGET check-rockspec
+                   COMMAND luarocks --local build ${PROJECT_SOURCE_DIR}/${ROCKSPEC}
+                   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                   COMMENT "Build Lua rockspec")
+
+install(TARGETS unreliablefs DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(FILES ${MANUAL_PAGES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man)
