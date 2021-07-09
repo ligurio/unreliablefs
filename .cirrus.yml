@@ -73,3 +73,9 @@ task:
 
   test_script:
     - make -C build pytest
+
+  always:
+    junit_artifacts:
+      path: "report.xml"
+      format: junit
+      type: text/xml
