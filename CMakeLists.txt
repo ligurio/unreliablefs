@@ -86,4 +86,5 @@ add_custom_command(TARGET check-rockspec
                    COMMENT "Build Lua rockspec")
 
 install(TARGETS unreliablefs DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-install(FILES ${MANUAL_PAGES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man)
+install(FILES "unreliablefs.1" DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+install(FILES "unreliablefs.conf.5" DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man5)
