@@ -21,6 +21,7 @@ const char *errinj_name[] =
     "errinj_kill_caller",
     "errinj_noop",
     "errinj_slowdown",
+    "errinj_1byte_read",
 };
 
 typedef enum {
@@ -28,6 +29,7 @@ typedef enum {
     ERRINJ_KILL_CALLER,
     ERRINJ_NOOP,
     ERRINJ_SLOWDOWN,
+    ERRINJ_1BYTE_READ,
 } errinj_type;
 
 typedef struct errinj_conf errinj_conf;
@@ -261,6 +263,11 @@ int error_inject(const char* path, fuse_op operation)
             } else {
 		fprintf(stdout, "end of '%s' slowdown with '%d' ns\n", op_name, err->duration);
             }
+            break;
+        case ERRINJ_1BYTE_READ:
+            fprintf(stdout, "start of 1-byte read\n");
+            if (strcmp(op_name, "read") == 0)
+                rc = -ERRINJ_1BYTE_READ;
             break;
         }
     }

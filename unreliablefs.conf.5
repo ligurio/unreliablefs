@@ -36,6 +36,10 @@ Set random errno.
 limited by supported errno's.
 .It Cm errinj_slowdown
 File operation slowdown for nanoseconds specified by duration parameter.
+.It Cm errinj_1byte_read
+Return exactly 1 byte on every
+.Xr read 2
+operation.
 .El
 .Pp
 The options are:
@@ -68,6 +72,10 @@ probability = 70
 [errinj_errno]
 path_regexp = *.xlog
 probability = 4
+
+[errinj_1byte_read]
+path_regexp = *.xlog
+probability = 100
 
 .Ed
 .Sh SEE ALSO

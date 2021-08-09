@@ -22,6 +22,7 @@
 #define MIN_PROBABLITY 0
 #define MAX_PROBABLITY 100
 #define ERRNO_NOOP -999
+#define ERRNO_1BYTE_READ -998
 #define DEFAULT_SIGNAL_NAME SIGKILL
 
 int error_inject(const char* path, fuse_op operation);
