@@ -386,6 +386,14 @@ int unreliable_statfs(const char *path, struct statvfs *buf)
     int ret = error_inject(path, OP_STATFS);
     if (ret == -ERRNO_NOOP) {
         return 0;
+    } else if (ret == -ERRNO_WRONG_CAPACITY) {
+        /* wrong capacity */
+        ret = statvfs(path, buf);
+        if (ret == -1) {
+            return -errno;
+        }
+        buf->f_blocks = buf->f_blocks + ( 15 / 100.0 ) * (uint64_t)buf->f_blocks;
+        return 0;
     } else if (ret) {
         return ret;
     }

@@ -40,6 +40,8 @@ File operation slowdown for nanoseconds specified by duration parameter.
 Return exactly 1 byte on every
 .Xr read 2
 operation.
+.It Cm errinj_wrong_capacity
+Report a wrong storage capacity. With enabled error injection real filesystem capacity increased for 15 percents.
 .El
 .Pp
 The options are:
@@ -76,6 +78,9 @@ probability = 4
 [errinj_1byte_read]
 path_regexp = *.xlog
 probability = 100
+
+[errinj_wrong_capacity]
+probability = 85
 
 .Ed
 .Sh SEE ALSO

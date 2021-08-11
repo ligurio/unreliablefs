@@ -22,6 +22,7 @@ const char *errinj_name[] =
     "errinj_noop",
     "errinj_slowdown",
     "errinj_1byte_read",
+    "errinj_wrong_capacity",
 };
 
 typedef enum {
@@ -30,6 +31,7 @@ typedef enum {
     ERRINJ_NOOP,
     ERRINJ_SLOWDOWN,
     ERRINJ_1BYTE_READ,
+    ERRINJ_WRONG_CAPACITY,
 } errinj_type;
 
 typedef struct errinj_conf errinj_conf;
@@ -268,6 +270,10 @@ int error_inject(const char* path, fuse_op operation)
             fprintf(stdout, "start of 1-byte read\n");
             if (strcmp(op_name, "read") == 0)
                 rc = -ERRINJ_1BYTE_READ;
+            break;
+        case ERRINJ_WRONG_CAPACITY:
+            if (strcmp(op_name, "statfs") == 0)
+                rc = -ERRNO_WRONG_CAPACITY;
             break;
         }
     }
