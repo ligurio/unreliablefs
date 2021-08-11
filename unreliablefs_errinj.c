@@ -15,6 +15,37 @@
 #include "unreliablefs.h"
 #include "unreliablefs_errinj.h"
 
+const char *errinj_name[] =
+{
+    "errinj_errno",
+    "errinj_kill_caller",
+    "errinj_noop",
+    "errinj_slowdown",
+};
+
+typedef enum {
+    ERRINJ_ERRNO,
+    ERRINJ_KILL_CALLER,
+    ERRINJ_NOOP,
+    ERRINJ_SLOWDOWN,
+} errinj_type;
+
+typedef struct errinj_conf errinj_conf;
+
+struct errinj_conf {
+    char *err_injection_name;
+    char *op_regexp;
+    char *path_regexp;
+    char *errno_regexp;
+    unsigned int probability;
+    unsigned int duration;
+    errinj_type type;
+
+    TAILQ_ENTRY(errinj_conf) entries;
+};
+
+TAILQ_HEAD(err_inj_q, errinj_conf);
+
 static int rand_range(int, int);
 int error_inject(const char* path, fuse_op operation);
 

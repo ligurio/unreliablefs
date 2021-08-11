@@ -17,6 +17,7 @@
 #endif
 
 #include "unreliablefs_ops.h"
+#include "unreliablefs_errinj.h"
 
 const char *fuse_op_name[] = {
     "getattr",
