@@ -14,7 +14,7 @@ def is_no_fusermount():
     return sys.platform.startswith("freebsd") or \
             sys.platform == "darwin"
 
-no_fusermount_support = not is_no_fusermount()
+no_fusermount_support = is_no_fusermount()
 
 def wait_for_mount(mount_process, mnt_dir,
                    test_fn=os.path.ismount):
