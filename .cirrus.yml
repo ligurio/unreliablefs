@@ -17,7 +17,8 @@ ubuntu_1804_gcc: &ubuntu_1804_gcc
   bootstrap_script:
     - apt-get update
   install_script:
-    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc  python-dev python3-dev python3-pytest fio
+    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc  python-dev python3-dev python3-pytest fio kmod
+    - modprobe fuse
 
 ubuntu_1804_clang: &ubuntu_1804_clang
   <<: *ubuntu_1804
@@ -26,7 +27,8 @@ ubuntu_1804_clang: &ubuntu_1804_clang
   bootstrap_script:
     - apt-get update
   install_script:
-    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc  python-dev python3-dev python3-pytest fio clang
+    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc  python-dev python3-dev python3-pytest fio clang kmod
+    - modprobe fuse
 
 ubuntu_2104_gcc: &ubuntu_2104_gcc
   <<: *ubuntu_2104
@@ -36,7 +38,8 @@ ubuntu_2104_gcc: &ubuntu_2104_gcc
   bootstrap_script:
     - apt-get update
   install_script:
-    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio
+    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio kmod
+    - modprobe fuse
 
 ubuntu_2104_clang: &ubuntu_2104_clang
   <<: *ubuntu_2104
@@ -46,7 +49,8 @@ ubuntu_2104_clang: &ubuntu_2104_clang
   bootstrap_script:
     - apt-get update
   install_script:
-    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio clang-12
+    - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio clang-12 kmod
+    - modprobe fuse
 
 macos_1101: &macos_1101
   osx_instance:
