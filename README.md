@@ -84,3 +84,4 @@ See documentation in [unreliablefs.1](https://ligurio.github.io/unreliablefs/unr
 - CharybdeFS - FUSE-based fault injection filesystem with a Thrift RPC
   interface for instrumentation.
 - PetardFS - FUSE-based file system for injecting intentional errors.
+- HookFS: A Usermode Hookable Filesystem Library.
