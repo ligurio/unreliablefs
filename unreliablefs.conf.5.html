@@ -5,6 +5,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="/mandoc.css" type="text/css" media="all"/>
   <title>UNRELIABLEFS.CONF(5)</title>
 </head>
@@ -17,103 +18,92 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">unreliablefs.conf</code> &#x2014;
-<div class="Nd" title="Nd">format of the configuration file used by
-  <a class="Xr" title="Xr">unreliablefs(1)</a></div>
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-The configuration file format is quite simple. Sections are delimited by square
-  brackets:
-<div class="Pp"></div>
-<cite class="Rs" title="Rs">[Section]</cite>
-<div class="Pp"></div>
-And options within brackets sections are simple key value pairs:
-<div class="Pp"></div>
-<cite class="Rs" title="Rs">Option = Value</cite>
-<h1 class="Sh" title="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
-Per-fault-injection customizable variables are specified within sections with
-  section names matching the fault-injection name.
-<div class="Pp"></div>
-Supported fault injections are:
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">unreliablefs.conf</code> &#x2014;
+    <span class="Nd">format of the configuration file used by
+    <a class="Xr">unreliablefs(1)</a></span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The configuration file format is quite simple. Sections are
+    delimited by square brackets:</p>
+<p class="Pp"><cite class="Rs">[Section]</cite></p>
+<p class="Pp">And options within brackets sections are simple key value
+  pairs:</p>
+<p class="Pp"><cite class="Rs">Option = Value</cite></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<p class="Pp">Per-fault-injection customizable variables are specified within
+    sections with section names matching the fault-injection name.</p>
+<p class="Pp">Supported fault injections are:</p>
 <dl class="Bl-tag">
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#errinj_noop"><code class="Cm" title="Cm" id="errinj_noop">errinj_noop</code></a></dt>
+  <dt id="errinj_noop"><a class="permalink" href="#errinj_noop"><code class="Cm">errinj_noop</code></a></dt>
   <dd>File operation replaced with no-op.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#errinj_kill_caller"><code class="Cm" title="Cm" id="errinj_kill_caller">errinj_kill_caller</code></a></dt>
+  <dt id="errinj_kill_caller"><a class="permalink" href="#errinj_kill_caller"><code class="Cm">errinj_kill_caller</code></a></dt>
   <dd>Send SIGKILL signal to a process that invoked file operation.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#errinj_errno"><code class="Cm" title="Cm" id="errinj_errno">errinj_errno</code></a></dt>
-  <dd>Set random errno. <a class="Xr" title="Xr">errno(2)</a> limited by
-      supported errno's.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#errinj_slowdown"><code class="Cm" title="Cm" id="errinj_slowdown">errinj_slowdown</code></a></dt>
+  <dt id="errinj_errno"><a class="permalink" href="#errinj_errno"><code class="Cm">errinj_errno</code></a></dt>
+  <dd>Set random errno. <a class="Xr">errno(2)</a> limited by supported
+    errno's.</dd>
+  <dt id="errinj_slowdown"><a class="permalink" href="#errinj_slowdown"><code class="Cm">errinj_slowdown</code></a></dt>
   <dd>File operation slowdown for nanoseconds specified by duration
     parameter.</dd>
 </dl>
-<div class="Pp"></div>
-The options are:
+<p class="Pp">The options are:</p>
 <dl class="Bl-tag">
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#op_regexp"><code class="Cm" title="Cm" id="op_regexp">op_regexp</code></a></dt>
+  <dt id="op_regexp"><a class="permalink" href="#op_regexp"><code class="Cm">op_regexp</code></a></dt>
   <dd>Sets the regular expression that matches file operation for what fault
       injection is applicable. Option uses format of regular expressions
-      described in <a class="Xr" title="Xr">re_format(7)</a>. POSIX Extended
-      Regular Expression syntax is supported and regular expressions do not
-      differentiate case.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#path_regexp"><code class="Cm" title="Cm" id="path_regexp">path_regexp</code></a></dt>
-  <dd>Sets the regular expression that matches paths where fault injection is
-      applicable. Option uses format of regular expressions described in
-      <a class="Xr" title="Xr">re_format(7)</a>. POSIX Extended Regular
+      described in <a class="Xr">re_format(7)</a>. POSIX Extended Regular
       Expression syntax is supported and regular expressions do not
       differentiate case.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#probability"><code class="Cm" title="Cm" id="probability">probability</code></a></dt>
+  <dt id="path_regexp"><a class="permalink" href="#path_regexp"><code class="Cm">path_regexp</code></a></dt>
+  <dd>Sets the regular expression that matches paths where fault injection is
+      applicable. Option uses format of regular expressions described in
+      <a class="Xr">re_format(7)</a>. POSIX Extended Regular Expression syntax
+      is supported and regular expressions do not differentiate case.</dd>
+  <dt id="probability"><a class="permalink" href="#probability"><code class="Cm">probability</code></a></dt>
   <dd>Sets the probability in percents. Probability equal to 0 means that error
       injection will never happen. Probability equal to 100 means that error
       injection will happen on each file operation.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#duration"><code class="Cm" title="Cm" id="duration">duration</code></a></dt>
+  <dt id="duration"><a class="permalink" href="#duration"><code class="Cm">duration</code></a></dt>
   <dd>Sets the duration of file operation slowdown. Applicable to
       errinj_slowdown only.</dd>
 </dl>
-<h1 class="Sh" title="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
-<div class="Bd">
-<pre class="Li">
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<div class="Bd Li">
+<pre>
+[errinj_noop]
+path_regexp = .*
+op_regexp = .*
+probability = 70
 
-[errinj_noop] 
-path_regexp = .* 
-op_regexp = .* 
-probability = 70 
- 
-[errinj_errno] 
-path_regexp = *.xlog 
-probability = 4 
+[errinj_errno]
+path_regexp = *.xlog
+probability = 4
 
 </pre>
 </div>
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr">unreliablefs(1)</a>,
-  <a class="Xr" title="Xr">errno(2)</a>, <a class="Xr" title="Xr">syslog(3)</a>,
-  <a class="Xr" title="Xr">re_format(7)</a>
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-The <a class="Xr" title="Xr">unreliablefs(1)</a> utility was written by
-  <span class="An" title="An">Sergey</span>
-  <span class="An" title="An">Bronnikov</span>.</div>
+<p class="Pp"><a class="Xr">unreliablefs(1)</a>, <a class="Xr">errno(2)</a>,
+    <a class="Xr">syslog(3)</a>, <a class="Xr">re_format(7)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<p class="Pp">The <a class="Xr">unreliablefs(1)</a> utility was written by
+    <span class="An">Sergey</span> <span class="An">Bronnikov</span>.</p>
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">April 15, 2021</td>
-    <td class="foot-os">Debian</td>
+    <td class="foot-os">Linux 5.11.0-27-generic</td>
   </tr>
 </table>
 </body>

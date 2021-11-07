@@ -5,6 +5,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="/mandoc.css" type="text/css" media="all"/>
   <title>UNRELIABLEFS(1)</title>
 </head>
@@ -17,138 +18,123 @@
   </tr>
 </table>
 <div class="manual-text">
-<h1 class="Sh" title="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<code class="Nm" title="Nm">unreliablefs</code> &#x2014;
-<div class="Nd" title="Nd">a FUSE-based fault-injecting filesystem</div>
-<h1 class="Sh" title="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">unreliablefs</code> &#x2014; <span class="Nd">a
+    FUSE-based fault-injecting filesystem</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <table class="Nm">
   <tr>
-    <td><code class="Nm" title="Nm">unreliablefs</code></td>
-    <td>mountpoint [<div class="Op"><code class="Fl" title="Fl">-basedir</code>
-      <var class="Ar" title="Ar">path</var></div>]
-      [<div class="Op"><code class="Fl" title="Fl">-seed</code>
-      <var class="Ar" title="Ar">number</var></div>]
-      [<div class="Op"><code class="Fl" title="Fl">-hvdf</code></div>]</td>
+    <td><code class="Nm">unreliablefs</code></td>
+    <td>mountpoint [<code class="Fl">-basedir</code> <var class="Ar">path</var>]
+      [<code class="Fl">-seed</code> <var class="Ar">number</var>]
+      [<code class="Fl">-hvdf</code>]</td>
   </tr>
 </table>
-<h1 class="Sh" title="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-The <code class="Nm" title="Nm">unreliablefs</code> is a filesystem that allows
-  to inject errors on file operations. Without configuration it works as
-  pass-through filesystem and redirects file operations to a file objects on a
-  real filesystem.
-<div class="Pp"></div>
-<code class="Nm" title="Nm">unreliablefs</code> uses Filesystem in Userspace
-  (FUSE) that allows easy setup without requiring a kernel recompile or new
-  kernel modules. Without any other configuration, any files in a mounted
-  directory will be available unchanged. To mount filesystem it is required to
-  specify mountpoint and after mount it will contain the same file tree as a
-  root filesystem.
-<div class="Pp"></div>
-The options are as follows:
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <code class="Nm">unreliablefs</code> is a filesystem that
+    allows to inject errors on file operations. Without configuration it works
+    as pass-through filesystem and redirects file operations to a file objects
+    on a real filesystem.</p>
+<p class="Pp"><code class="Nm">unreliablefs</code> uses Filesystem in Userspace
+    (FUSE) that allows easy setup without requiring a kernel recompile or new
+    kernel modules. Without any other configuration, any files in a mounted
+    directory will be available unchanged. To mount filesystem it is required to
+    specify mountpoint and after mount it will contain the same file tree as a
+    root filesystem.</p>
+<p class="Pp">The options are as follows:</p>
 <dl class="Bl-tag">
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#basedir"><code class="Fl" title="Fl" id="basedir">-basedir</code></a>
-    <var class="Ar" title="Ar">path</var></dt>
+  <dt id="basedir"><a class="permalink" href="#basedir"><code class="Fl">-basedir</code></a>
+    <var class="Ar">path</var></dt>
   <dd>Specify path to a directory that should be mount.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#seed"><code class="Fl" title="Fl" id="seed">-seed</code></a>
-    <var class="Ar" title="Ar">number</var></dt>
+  <dt id="seed"><a class="permalink" href="#seed"><code class="Fl">-seed</code></a>
+    <var class="Ar">number</var></dt>
   <dd>Specify a seed.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#f"><code class="Fl" title="Fl" id="f">-f</code></a></dt>
+  <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a></dt>
   <dd>Do not daemonize.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#d"><code class="Fl" title="Fl" id="d">-d</code></a></dt>
+  <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a></dt>
   <dd>Do not daemonize. If this option is specified,
-      <code class="Nm" title="Nm">unreliablefs</code> will run in the foreground
-      and log to <i class="Em" title="Em">stderr</i>.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#v"><code class="Fl" title="Fl" id="v">-v</code></a></dt>
+      <code class="Nm">unreliablefs</code> will run in the foreground and log to
+      <a class="permalink" href="#stderr"><i class="Em" id="stderr">stderr</i></a>.</dd>
+  <dt id="v"><a class="permalink" href="#v"><code class="Fl">-v</code></a></dt>
   <dd>Show version.</dd>
-  <dt>&#x00A0;</dt>
-  <dd>&#x00A0;</dd>
-  <dt><a class="permalink" href="#h"><code class="Fl" title="Fl" id="h">-h</code></a></dt>
+  <dt id="h"><a class="permalink" href="#h"><code class="Fl">-h</code></a></dt>
   <dd>Show usage.</dd>
 </dl>
-<div class="Pp"></div>
-Supported file operations are: <a class="Xr" title="Xr">access(2)</a>,
-  <a class="Xr" title="Xr">chmod(2)</a>, <a class="Xr" title="Xr">chown(2)</a>,
-  <a class="Xr" title="Xr">creat(2)</a>,
-  <a class="Xr" title="Xr">fallocate(2)</a>,
-  <a class="Xr" title="Xr">flock(2)</a>, <a class="Xr" title="Xr">fsync(2)</a>,
-  <a class="Xr" title="Xr">ftruncate(2)</a>,
-  <a class="Xr" title="Xr">getxattr(2)</a>,
-  <a class="Xr" title="Xr">ioctl(2)</a>, <a class="Xr" title="Xr">link(2)</a>,
-  <a class="Xr" title="Xr">listxattr(2)</a>,
-  <a class="Xr" title="Xr">lock(2)</a>, <a class="Xr" title="Xr">lstat(2)</a>,
-  <a class="Xr" title="Xr">mkdir(2)</a>, <a class="Xr" title="Xr">mknod(2)</a>,
-  <a class="Xr" title="Xr">open(2)</a>, <a class="Xr" title="Xr">read(2)</a>,
-  <a class="Xr" title="Xr">readdir(2)</a>,
-  <a class="Xr" title="Xr">readlink(2)</a>,
-  <a class="Xr" title="Xr">removexattr(2)</a>,
-  <a class="Xr" title="Xr">rename(2)</a>, <a class="Xr" title="Xr">rmdir(2)</a>,
-  <a class="Xr" title="Xr">setxattr(2)</a>,
-  <a class="Xr" title="Xr">statfs(2)</a>,
-  <a class="Xr" title="Xr">symlink(2)</a>,
-  <a class="Xr" title="Xr">truncate(2)</a>,
-  <a class="Xr" title="Xr">unlink(2)</a>,
-  <a class="Xr" title="Xr">utimensat(2)</a>,
-  <a class="Xr" title="Xr">write(2)</a>.
-<div class="Pp"></div>
-Following functions are unsupported on OpenBSD:
-  <a class="Xr" title="Xr">removexattr(2)</a>,
-  <a class="Xr" title="Xr">setxattr(2)</a>,
-  <a class="Xr" title="Xr">getxattr(2)</a>,
-  <a class="Xr" title="Xr">listxattr(2)</a>,
-  <a class="Xr" title="Xr">flock(2)</a>,
-  <a class="Xr" title="Xr">fallocate(2)</a>.
-<h1 class="Sh" title="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+<p class="Pp">Supported file operations are: <a class="Xr">access(2)</a>,
+    <a class="Xr">chmod(2)</a>, <a class="Xr">chown(2)</a>,
+    <a class="Xr">creat(2)</a>, <a class="Xr">fallocate(2)</a>,
+    <a class="Xr">flock(2)</a>, <a class="Xr">fsync(2)</a>,
+    <a class="Xr">ftruncate(2)</a>, <a class="Xr">getxattr(2)</a>,
+    <a class="Xr">ioctl(2)</a>, <a class="Xr">link(2)</a>,
+    <a class="Xr">listxattr(2)</a>, <a class="Xr">lock(2)</a>,
+    <a class="Xr">lstat(2)</a>, <a class="Xr">mkdir(2)</a>,
+    <a class="Xr">mknod(2)</a>, <a class="Xr">open(2)</a>,
+    <a class="Xr">read(2)</a>, <a class="Xr">readdir(2)</a>,
+    <a class="Xr">readlink(2)</a>, <a class="Xr">removexattr(2)</a>,
+    <a class="Xr">rename(2)</a>, <a class="Xr">rmdir(2)</a>,
+    <a class="Xr">setxattr(2)</a>, <a class="Xr">statfs(2)</a>,
+    <a class="Xr">symlink(2)</a>, <a class="Xr">truncate(2)</a>,
+    <a class="Xr">unlink(2)</a>, <a class="Xr">utimensat(2)</a>,
+    <a class="Xr">write(2)</a>.</p>
+<p class="Pp">Following functions are unsupported on OpenBSD:
+    <a class="Xr">removexattr(2)</a>, <a class="Xr">setxattr(2)</a>,
+    <a class="Xr">getxattr(2)</a>, <a class="Xr">listxattr(2)</a>,
+    <a class="Xr">flock(2)</a>, <a class="Xr">fallocate(2)</a>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
   STATUS</a></h1>
-The <code class="Nm" title="Nm">unreliablefs</code> utility exits&#x00A0;0 on
-  success, and&#x00A0;&gt;0 if an error occurs.
-<h1 class="Sh" title="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
-<div class="Bd">
-<pre class="Li">
-
-$ mkdir /tmp/fs 
-$ unreliablefs /tmp/fs -basedir=/tmp -seed=1618680646 
-$ cat &lt;&lt; EOF &gt; /tmp/fs/unreliablefs.conf 
-[errinj_noop] 
-op_regexp = .* 
-path_regexp = .* 
-probability = 30 
-EOF 
-$ ls -la 
-$ umount /tmp/fs 
+<p class="Pp">The <code class="Nm">unreliablefs</code> utility exits&#x00A0;0 on
+    success, and&#x00A0;&gt;0 if an error occurs.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<div class="Bd Li">
+<pre>
+$ mkdir /tmp/fs
+$ unreliablefs /tmp/fs -basedir=/tmp -seed=1618680646
+$ cat &lt;&lt; EOF &gt; /tmp/fs/unreliablefs.conf
+[errinj_noop]
+op_regexp = .*
+path_regexp = .*
+probability = 30
+EOF
+$ ls -la
+$ umount /tmp/fs
 
 </pre>
 </div>
-<h1 class="Sh" title="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<a class="Xr" title="Xr">fusermount(1)</a>,
-  <a class="Xr" title="Xr">errno(2)</a>, <a class="Xr" title="Xr">fuse(4)</a>,
-  <a class="Xr" title="Xr">fuse(8)</a>,
-  <a class="Xr" title="Xr">unreliablefs.conf(5)</a>,
-  <a class="Xr" title="Xr">mount.fuse(8)</a>
-<h1 class="Sh" title="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-The <code class="Nm" title="Nm">unreliablefs</code> utility was written by
-  <span class="An" title="An">Sergey</span>
-  <span class="An" title="An">Bronnikov</span>.
-<h1 class="Sh" title="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
-Faults can be injected before a start of a file operation, and cannot be
-  injected say in a middle of file operation. So if a file operation has been
-  successfully started then <code class="Nm" title="Nm">unreliablefs</code> will
-  not affect it and final result entirely depends on a base filesystem and
-  application that started file operation.</div>
+<p class="Pp"><a class="Xr">fusermount(1)</a>, <a class="Xr">errno(2)</a>,
+    <a class="Xr">fuse(4)</a>, <a class="Xr">fuse(8)</a>,
+    <a class="Xr">unreliablefs.conf(5)</a>, <a class="Xr">mount.fuse(8)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<p class="Pp">The <code class="Nm">unreliablefs</code> utility was written by
+    <span class="An">Sergey</span> <span class="An">Bronnikov</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
+<p class="Pp">Faults can be injected before a start of a file operation, and
+    cannot be injected say in a middle of file operation. So if a file operation
+    has been successfully started then <code class="Nm">unreliablefs</code> will
+    not affect it and final result entirely depends on a base filesystem and
+    application that started file operation.</p>
+</section>
+</div>
 <table class="foot">
   <tr>
     <td class="foot-date">November 3, 2020</td>
-    <td class="foot-os">Debian</td>
+    <td class="foot-os">Linux 5.11.0-27-generic</td>
   </tr>
 </table>
 </body>
