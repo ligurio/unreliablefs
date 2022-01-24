@@ -18,9 +18,9 @@ elseif(${Python_FOUND})
 endif()
 
 set(UNRELIABLEFS_SRC conf.c
-		unreliablefs.c
-		unreliablefs_errinj.c
-		unreliablefs_ops.c)
+                     unreliablefs.c
+                     unreliablefs_errinj.c
+                     unreliablefs_ops.c)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 find_package(FUSE 2.9 REQUIRED)
