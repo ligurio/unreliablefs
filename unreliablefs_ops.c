@@ -16,8 +16,6 @@
 #define _XOPEN_SOURCE 700
 #endif
 
-#define ERRNO_NOOP -999
-
 #include "unreliablefs_ops.h"
 
 const char *fuse_op_name[] = {
