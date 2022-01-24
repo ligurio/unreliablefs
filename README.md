@@ -85,3 +85,5 @@ See documentation in [unreliablefs.1](https://ligurio.github.io/unreliablefs/unr
   interface for instrumentation.
 - PetardFS - FUSE-based file system for injecting intentional errors.
 - HookFS: A Usermode Hookable Filesystem Library.
+- Kibosh: A fault-injecting filesystem for Linux. It is written in C using
+  FUSE, faults are injected by writing JSON to the control file.
