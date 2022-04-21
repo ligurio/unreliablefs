@@ -3,17 +3,20 @@ ubuntu_1804: &ubuntu_1804
     image: ubuntu:bionic
   env:
     UBUNTU_CODENAME: bionic
+    DEBIAN_FRONTEND: noninteractive
 
 ubuntu_2104: &ubuntu_2104
   container:
     image: ubuntu:hirsute
   env:
     UBUNTU_CODENAME: hirsute
+    DEBIAN_FRONTEND: noninteractive
 
 ubuntu_1804_gcc: &ubuntu_1804_gcc
   <<: *ubuntu_1804
   env:
     CC: gcc-7
+    DEBIAN_FRONTEND: noninteractive
   bootstrap_script:
     - apt-get update
   install_script:
@@ -23,6 +26,7 @@ ubuntu_1804_clang: &ubuntu_1804_clang
   <<: *ubuntu_1804
   env:
     CC: clang
+    DEBIAN_FRONTEND: noninteractive
   bootstrap_script:
     - apt-get update
   install_script:
