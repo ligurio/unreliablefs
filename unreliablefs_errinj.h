@@ -22,6 +22,8 @@
 #define MIN_PROBABLITY 0
 #define MAX_PROBABLITY 100
 #define ERRNO_NOOP -999
+#define ERRNO_1BYTE_READ -998
+#define ERRNO_WRONG_CAPACITY -997
 #define DEFAULT_SIGNAL_NAME SIGKILL
 
 int error_inject(const char* path, fuse_op operation);
@@ -30,36 +32,5 @@ void config_delete(struct err_inj_q *config);
 int conf_option_handler(void* cfg, const char* section,
                         const char* name, const char* value);
 int is_regex_matched(const char *regex, const char *string);
-
-const char *errinj_name[] =
-{
-    "errinj_errno",
-    "errinj_kill_caller",
-    "errinj_noop",
-    "errinj_slowdown",
-};
-
-typedef enum {
-    ERRINJ_ERRNO,
-    ERRINJ_KILL_CALLER,
-    ERRINJ_NOOP,
-    ERRINJ_SLOWDOWN,
-} errinj_type;
-
-typedef struct errinj_conf errinj_conf;
-
-struct errinj_conf {
-    char *err_injection_name;
-    char *op_regexp;
-    char *path_regexp;
-    char *errno_regexp;
-    unsigned int probability;
-    unsigned int duration;
-    errinj_type type;
-
-    TAILQ_ENTRY(errinj_conf) entries;
-};
-
-TAILQ_HEAD(err_inj_q, errinj_conf);
 
 #endif /* ERRINJ_HH */

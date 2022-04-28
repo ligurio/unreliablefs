@@ -13,6 +13,12 @@ Supported fault injections are:
   (similar to [libeatmydata](https://github.com/stewartsmith/libeatmydata),
   but applicable to any file operation).
 - `errinj_slowdown` - slowdown invoked file operation.
+- `errinj_1byte_read` - amount of data returned by `read()` call is always
+  limited by a single byte.
+- `errinj_wrong_capacity` - filesystem reports a wrong storage capacity, real
+  capacity increased for 15 percents. Simulated error can happen in a wild, for
+  instance see 'Fake capacity USB sticks' in
+  [SQLite Documentation](https://www.sqlite.org/howtocorrupt.html).
 
 ### Building
 

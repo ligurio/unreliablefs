@@ -15,6 +15,41 @@
 #include "unreliablefs.h"
 #include "unreliablefs_errinj.h"
 
+const char *errinj_name[] =
+{
+    "errinj_errno",
+    "errinj_kill_caller",
+    "errinj_noop",
+    "errinj_slowdown",
+    "errinj_1byte_read",
+    "errinj_wrong_capacity",
+};
+
+typedef enum {
+    ERRINJ_ERRNO,
+    ERRINJ_KILL_CALLER,
+    ERRINJ_NOOP,
+    ERRINJ_SLOWDOWN,
+    ERRINJ_1BYTE_READ,
+    ERRINJ_WRONG_CAPACITY,
+} errinj_type;
+
+typedef struct errinj_conf errinj_conf;
+
+struct errinj_conf {
+    char *err_injection_name;
+    char *op_regexp;
+    char *path_regexp;
+    char *errno_regexp;
+    unsigned int probability;
+    unsigned int duration;
+    errinj_type type;
+
+    TAILQ_ENTRY(errinj_conf) entries;
+};
+
+TAILQ_HEAD(err_inj_q, errinj_conf);
+
 static int rand_range(int, int);
 int error_inject(const char* path, fuse_op operation);
 
@@ -230,6 +265,15 @@ int error_inject(const char* path, fuse_op operation)
             } else {
 		fprintf(stdout, "end of '%s' slowdown with '%d' ns\n", op_name, err->duration);
             }
+            break;
+        case ERRINJ_1BYTE_READ:
+            fprintf(stdout, "start of 1-byte read\n");
+            if (strcmp(op_name, "read") == 0)
+                rc = -ERRINJ_1BYTE_READ;
+            break;
+        case ERRINJ_WRONG_CAPACITY:
+            if (strcmp(op_name, "statfs") == 0)
+                rc = -ERRNO_WRONG_CAPACITY;
             break;
         }
     }

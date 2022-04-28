@@ -13,6 +13,9 @@ description = {
     - `errinj_kill_caller` - send SIGKILL to a process that invoked file operation;
     - `errinj_noop` - replace file operation with no operation;
     - `errinj_slowdown` - slowdown invoked file operation;
+    - `errinj_1byte_read` - amount of data returned by `read()` call is always
+    limited by a single byte.
+    - `errinj_wrong_capacity` - filesystem reports a wrong storage capacity.
     ]],
     homepage = "https://github.com/ligurio/unreliablefs",
     maintainer = "Sergey Bronnikov <estetus@gmail.com>",
