@@ -16,9 +16,8 @@
 #define _XOPEN_SOURCE 700
 #endif
 
-#define ERRNO_NOOP -999
-
 #include "unreliablefs_ops.h"
+#include "unreliablefs_errinj.h"
 
 const char *fuse_op_name[] = {
     "getattr",
@@ -318,6 +317,8 @@ int unreliable_read(const char *path, char *buf, size_t size, off_t offset,
     int ret = error_inject(path, OP_READ);
     if (ret == -ERRNO_NOOP) {
         return 0;
+    } else if (ret == -ERRNO_1BYTE_READ) {
+        size = 1;
     } else if (ret) {
         return ret;
     }

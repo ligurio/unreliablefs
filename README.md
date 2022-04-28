@@ -13,6 +13,8 @@ Supported fault injections are:
   (similar to [libeatmydata](https://github.com/stewartsmith/libeatmydata),
   but applicable to any file operation).
 - `errinj_slowdown` - slowdown invoked file operation.
+- `errinj_1byte_read` - amount of data returned by `read()` call is always
+  limited by a single byte.
 
 ### Building
 
