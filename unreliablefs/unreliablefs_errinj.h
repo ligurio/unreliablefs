@@ -54,7 +54,7 @@ struct errinj_conf {
     char *path_regexp;
     char *errno_regexp;
     unsigned int probability;
-    unsigned int duration;
+    unsigned long long duration;
     errinj_type type;
 
     TAILQ_ENTRY(errinj_conf) entries;
