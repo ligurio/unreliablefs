@@ -58,10 +58,9 @@ freebsd_12_2: &freebsd_12_2
   env:
     CC: clang
   install_script:
-    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf python3 py38-pip fio
+    - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf python3 py39-pip py39-pytest fio
     - kldload fuse
     - kldstat
-    - sudo python3.8 -m pip install pytest
 
 task:
   matrix:
