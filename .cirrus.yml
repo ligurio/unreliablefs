@@ -5,11 +5,11 @@ ubuntu_1804: &ubuntu_1804
     UBUNTU_CODENAME: bionic
     DEBIAN_FRONTEND: noninteractive
 
-ubuntu_2104: &ubuntu_2104
+ubuntu_2004: &ubuntu_2004
   container:
-    image: ubuntu:hirsute
+    image: ubuntu:focal
   env:
-    UBUNTU_CODENAME: hirsute
+    UBUNTU_CODENAME: focal
     DEBIAN_FRONTEND: noninteractive
 
 ubuntu_1804_gcc: &ubuntu_1804_gcc
@@ -32,8 +32,8 @@ ubuntu_1804_clang: &ubuntu_1804_clang
   install_script:
     - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc  python-dev python3-dev python3-pytest fio clang
 
-ubuntu_2104_gcc: &ubuntu_2104_gcc
-  <<: *ubuntu_2104
+ubuntu_2004_gcc: &ubuntu_2004_gcc
+  <<: *ubuntu_2004
   env:
     CC: gcc
     DEBIAN_FRONTEND: noninteractive
@@ -42,8 +42,8 @@ ubuntu_2104_gcc: &ubuntu_2104_gcc
   install_script:
     - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio
 
-ubuntu_2104_clang: &ubuntu_2104_clang
-  <<: *ubuntu_2104
+ubuntu_2004_clang: &ubuntu_2004_clang
+  <<: *ubuntu_2004
   env:
     CC: clang-12
     DEBIAN_FRONTEND: noninteractive
@@ -79,10 +79,10 @@ task:
       <<: *ubuntu_1804_gcc
     - name: "Build and test on Ubuntu 18.04 LTS with Clang 6"
       <<: *ubuntu_1804_clang
-    - name: "Build and test on Ubuntu 21.04 with GCC 10"
-      <<: *ubuntu_2104_gcc
-    - name: "Build and test on Ubuntu 21.04 with Clang 12"
-      <<: *ubuntu_2104_clang
+    - name: "Build and test on Ubuntu 20.04 with GCC 9"
+      <<: *ubuntu_2004_gcc
+    - name: "Build and test on Ubuntu 20.04 with Clang 12"
+      <<: *ubuntu_2004_clang
     - name: "Build and test on FreeBSD 12.2"
       <<: *freebsd_12_2
     - name: "Build and test on macOS 11.0.1 (Big Sur)"
