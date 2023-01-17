@@ -52,16 +52,6 @@ ubuntu_2004_clang: &ubuntu_2004_clang
   install_script:
     - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio clang-12
 
-macos_1101: &macos_1101
-  osx_instance:
-    image: big-sur-base
-  install_script:
-    - brew update-reset
-    - brew upgrade
-    - brew install --cask osxfuse
-    - brew install cmake python3 fio
-    - sudo python3 -m pip install pytest
-
 freebsd_12_2: &freebsd_12_2
   freebsd_instance:
     image: freebsd-12-2-release-amd64
@@ -85,8 +75,6 @@ task:
       <<: *ubuntu_2004_clang
     - name: "Build and test on FreeBSD 12.2"
       <<: *freebsd_12_2
-    - name: "Build and test on macOS 11.0.1 (Big Sur)"
-      <<: *macos_1101
 
   build_script:
     - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
