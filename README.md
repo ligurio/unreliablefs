@@ -25,8 +25,8 @@ Prerequisites:
 - macOS: `brew install --cask osxfuse`
 
 ```sh
-$ mkdir build && cd build
-$ cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j
+$ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+$ cmake --build build --parallel
 ```
 
 ### Packages
