@@ -8,7 +8,7 @@ import stat
 import time
 from os.path import join as pjoin
 
-basename = pjoin(os.path.dirname(__file__), '..')
+basedir = pjoin(os.path.dirname(__file__), '../..')
 
 def is_no_fusermount():
     return sys.platform.startswith("freebsd") or \

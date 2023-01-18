@@ -20,7 +20,7 @@ import errno
 from contextlib import contextmanager
 from tempfile import NamedTemporaryFile
 from util import (wait_for_mount, umount, cleanup, base_cmdline,
-                  basename, fuse_test_marker, safe_sleep)
+                  basedir, fuse_test_marker, safe_sleep)
 from os.path import join as pjoin
 
 def is_no_xattr_support():
@@ -48,7 +48,7 @@ def setup_unreliablefs(tmpdir):
     src_dir = str(tmpdir.mkdir('src'))
 
     options = "-basedir={}".format(src_dir)
-    cmdline = base_cmdline + [ pjoin(basename, 'build/unreliablefs'), mnt_dir, options ]
+    cmdline = base_cmdline + [ pjoin(basedir, 'build/unreliablefs/unreliablefs'), mnt_dir, options ]
     mount_process = subprocess.Popen(cmdline)
     wait_for_mount(mount_process, mnt_dir)
 
@@ -556,7 +556,7 @@ def test_utimens(setup_unreliablefs, symlink):
 
 @pytest.mark.long
 def test_fsx(setup_unreliablefs):
-    fsx_bin = shutil.which('fsx') or 'build/tests/fsx'
+    fsx_bin = shutil.which('fsx') or pjoin(basedir, 'build/unreliablefs/tests/fsx')
     if not fsx_bin:
         pytest.skip('fsx is required to execute testcase')
 
