@@ -1,0 +1,32 @@
+name: Build and test
+
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+  workflow_dispatch:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+jobs:
+  macos:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+
+      - name: Setup packages
+        run: |
+          brew update-reset
+          brew upgrade
+          brew install --cask osxfuse
+          brew install cmake python3 fio
+          sudo python3 -m pip install pytest
+
+      - name: Running CMake
+        run: cmake -S . -B build
+
+      - name: Building
+        run: cmake --build build --parallel $(nproc)
