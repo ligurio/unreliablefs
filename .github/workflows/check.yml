@@ -1,0 +1,55 @@
+name: Static analysis
+
+on:
+  push:
+    paths:
+      - 'unreliablefs/**'
+  pull_request:
+    paths:
+      - 'unreliablefs/**'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  security-events: write
+
+jobs:
+  static-analysis:
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    runs-on: ubuntu-20.04
+    env:
+      _JAVA_OPTIONS: -Xmx1024m
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup packages
+        run: sudo apt install -y cmake libc-dev build-essential fuse libfuse-dev
+
+      - name: Running CMake
+        run: cmake -S . -B build
+
+      - name: Building
+        run: cmake --build build --parallel $(nproc)
+
+      - name: Setup CodeQL
+        run: |
+          wget https://github.com/github/codeql-action/releases/latest/download/codeql-bundle-linux64.tar.gz
+          tar -xvzf ./codeql-bundle-linux64.tar.gz
+
+      - name: Check with CodeQL
+        run: |
+          ./codeql/codeql database create lgtm --language=cpp \
+            --command='cmake --build build --clean-first'
+          ./codeql/codeql database analyze lgtm --format=sarif-latest \
+            --output=./codeql-lgtm.sarif cpp-lgtm.qls
+          ./codeql/codeql github upload-results \
+            --repository="${GITHUB_REPOSITORY}" --ref="${GITHUB_REF}" \
+            --commit="${GITHUB_SHA}" --sarif=./codeql-lgtm.sarif
