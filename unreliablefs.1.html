@@ -81,10 +81,11 @@
     <a class="Xr">symlink(2)</a>, <a class="Xr">truncate(2)</a>,
     <a class="Xr">unlink(2)</a>, <a class="Xr">utimensat(2)</a>,
     <a class="Xr">write(2)</a>.</p>
-<p class="Pp">Following functions are unsupported on OpenBSD:
-    <a class="Xr">removexattr(2)</a>, <a class="Xr">setxattr(2)</a>,
-    <a class="Xr">getxattr(2)</a>, <a class="Xr">listxattr(2)</a>,
-    <a class="Xr">flock(2)</a>, <a class="Xr">fallocate(2)</a>.</p>
+<p class="Pp">Following functions are unsupported on
+    <span class="Ux">OpenBSD</span>: <a class="Xr">removexattr(2)</a>,
+    <a class="Xr">setxattr(2)</a>, <a class="Xr">getxattr(2)</a>,
+    <a class="Xr">listxattr(2)</a>, <a class="Xr">flock(2)</a>,
+    <a class="Xr">fallocate(2)</a>.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
@@ -114,8 +115,41 @@ $ umount /tmp/fs
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <p class="Pp"><a class="Xr">fusermount(1)</a>, <a class="Xr">errno(2)</a>,
-    <a class="Xr">fuse(4)</a>, <a class="Xr">fuse(8)</a>,
-    <a class="Xr">unreliablefs.conf(5)</a>, <a class="Xr">mount.fuse(8)</a></p>
+    <a class="Xr">fuse(4)</a>, <a class="Xr">unreliablefs.conf(5)</a>,
+    <a class="Xr">fuse(8)</a>, <a class="Xr">mount.fuse(8)</a></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Anthony Rebello</span>,
+    <span class="RsA">Yuvraj Patel</span>, <span class="RsA">Ramnatthan
+    Alagappan</span>, <span class="RsA">Andrea C. Arpaci-Dusseau</span>, and
+    <span class="RsA">Remzi H. Arpaci-Dusseau</span>, <span class="RsT">Can
+    Applications Recover from fsync Failures?</span>, <i class="RsI">University
+    of Wisconsin - Madison</i>,
+    <a class="RsU" href="https://www.usenix.org/conference/atc20/presentation/rebello">https://www.usenix.org/conference/atc20/presentation/rebello</a>.</cite></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Thanumalayan Sankaranarayana
+    Pillai</span>, <span class="RsA">Vijay Chidambaram</span>,
+    <span class="RsA">Ramnatthan Alagappan</span>, <span class="RsA">Samer
+    Al-Kiswany</span>, <span class="RsA">Andrea C. Arpaci-Dusseau</span>, and
+    <span class="RsA">Remzi H. Arpaci-Dusseau</span>, <span class="RsT">All File
+    Systems Are Not Created Equal: On the Complexity of Crafting
+    Crash-Consistent Applications</span>, <i class="RsI">University of Wisconsin
+    - Madison</i>,
+    <a class="RsU" href="https://www.usenix.org/conference/osdi14/technical-sessions/presentation/pillai">https://www.usenix.org/conference/osdi14/technical-sessions/presentation/pillai</a>.</cite></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Maha Kooli</span> and
+    <span class="RsA">Giorgio Di Natale</span>, <span class="RsT">A survey on
+    simulation-based fault injection tools for complex
+  systems</span>.</cite></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Dan Luu</span>,
+    <span class="RsT">Files are hard</span>.</cite></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Bharath Kumar Reddy
+    Vangoor</span>, <span class="RsA">Vasily Tarasov</span>, and
+    <span class="RsA">Erez Zadok</span>, <span class="RsT">To FUSE or Not to
+    FUSE: Performance of User-Space File Systems</span>, <i class="RsI">Stony
+    Brook University</i>, <i class="RsI">IBM Research-Almaden</i>,
+    <a class="RsU" href="https://www.usenix.org/conference/fast17/technical-sessions/presentation/vangoor">https://www.usenix.org/conference/fast17/technical-sessions/presentation/vangoor</a>.</cite></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Aditya Rajgarhia</span> and
+    <span class="RsA">Ashish Gehani</span>, <span class="RsT">Performance and
+    Extension of User Space File Systems</span>, <i class="RsI">Georgia
+    Institute of Technology</i>,
+    <a class="RsU" href="https://www.usenix.org/conference/atc19/presentation/bijlani">https://www.usenix.org/conference/atc19/presentation/bijlani</a>.</cite></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
@@ -134,7 +168,7 @@ $ umount /tmp/fs
 <table class="foot">
   <tr>
     <td class="foot-date">November 3, 2020</td>
-    <td class="foot-os">Linux 5.11.0-27-generic</td>
+    <td class="foot-os">Debian</td>
   </tr>
 </table>
 </body>
