@@ -66,3 +66,8 @@ See documentation in [unreliablefs.1](https://ligurio.github.io/unreliablefs/unr
 - Kibosh - fault-injecting filesystem for Linux. It is written in C using
   FUSE, faults are injected by writing JSON to the control file.
 - chaos-mesh/toda - hook filesystem and utils to inject I/O chaos.
+
+### License
+
+MIT License, Copyright (c) 2020-2023, Sergey Bronnikov
+BSD-3-Clause, Copyright (C) 2009-2020, Ben Hoyt
