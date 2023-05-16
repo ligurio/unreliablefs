@@ -53,20 +53,6 @@ $ umount /tmp/fs
 See documentation in [unreliablefs.1](https://ligurio.github.io/unreliablefs/unreliablefs.1.html) and
 [unreliablefs.conf.5](https://ligurio.github.io/unreliablefs/unreliablefs.conf.5.html).
 
-### Similar projects
-
-- CuttleFS - FUSE-based file system with private page cache to simulate post fsync
-  failure characteristics of modern file systems.
-- libeatmydata - `LD_PRELOAD` library that disables all forms of writing data
-  safely to disk. `fsync()` becomes a NO-OP, `O_SYNC` is removed etc.
-- CharybdeFS - FUSE-based fault injection filesystem with a Thrift RPC
-  interface for instrumentation.
-- PetardFS - FUSE-based file system for injecting intentional errors.
-- HookFS - Usermode Hookable Filesystem Library.
-- Kibosh - fault-injecting filesystem for Linux. It is written in C using
-  FUSE, faults are injected by writing JSON to the control file.
-- chaos-mesh/toda - hook filesystem and utils to inject I/O chaos.
-
 ### License
 
 MIT License, Copyright (c) 2020-2023, Sergey Bronnikov
