@@ -133,7 +133,7 @@ int unreliable_mknod(const char *path, mode_t mode, dev_t dev)
         return ret;
     }
 
-    ret = mknod(path, mode, dev);    
+    ret = mknod(path, mode, dev);
     if (ret == -1) {
         return -errno;
     }
@@ -167,7 +167,7 @@ int unreliable_unlink(const char *path)
         return ret;
     }
 
-    ret = unlink(path); 
+    ret = unlink(path);
     if (ret == -1) {
         return -errno;
     }
@@ -184,7 +184,7 @@ int unreliable_rmdir(const char *path)
         return ret;
     }
 
-    ret = rmdir(path); 
+    ret = rmdir(path);
     if (ret == -1) {
         return -errno;
     }
@@ -251,7 +251,7 @@ int unreliable_chmod(const char *path, mode_t mode)
     } else if (ret) {
         return ret;
     }
-    
+
     ret = chmod(path, mode);
     if (ret < 0) {
         return -errno;
@@ -286,7 +286,7 @@ int unreliable_truncate(const char *path, off_t length)
         return ret;
     }
 
-    ret = truncate(path, length); 
+    ret = truncate(path, length);
     if (ret == -1) {
         return -errno;
     }
@@ -428,7 +428,7 @@ int unreliable_release(const char *path, struct fuse_file_info *fi)
         return -errno;
     }
 
-    return 0;    
+    return 0;
 }
 
 int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
@@ -496,7 +496,7 @@ int unreliable_getxattr(const char *path, const char *name,
     if (ret == -1) {
         return -errno;
     }
-    
+
     return 0;
 }
 
@@ -517,7 +517,7 @@ int unreliable_listxattr(const char *path, char *list, size_t size)
     if (ret == -1) {
         return -errno;
     }
-    
+
     return ret;
 }
 
@@ -538,8 +538,8 @@ int unreliable_removexattr(const char *path, const char *name)
     if (ret == -1) {
         return -errno;
     }
-    
-    return 0;    
+
+    return 0;
 }
 #endif /* HAVE_XATTR */
 
@@ -559,7 +559,7 @@ int unreliable_opendir(const char *path, struct fuse_file_info *fi)
     }
     fi->fh = (int64_t) dir;
 
-    return 0;    
+    return 0;
 }
 
 int unreliable_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
@@ -609,8 +609,8 @@ int unreliable_releasedir(const char *path, struct fuse_file_info *fi)
     if (ret == -1) {
         return -errno;
     }
-    
-    return 0;    
+
+    return 0;
 }
 
 int unreliable_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
@@ -662,11 +662,11 @@ int unreliable_access(const char *path, int mode)
         return ret;
     }
 
-    ret = access(path, mode); 
+    ret = access(path, mode);
     if (ret == -1) {
         return -errno;
     }
-    
+
     return 0;
 }
 
@@ -686,7 +686,7 @@ int unreliable_create(const char *path, mode_t mode,
     }
     fi->fh = ret;
 
-    return 0;    
+    return 0;
 }
 
 int unreliable_ftruncate(const char *path, off_t length,
@@ -703,8 +703,8 @@ int unreliable_ftruncate(const char *path, off_t length,
     if (ret == -1) {
         return -errno;
     }
-    
-    return 0;    
+
+    return 0;
 }
 
 int unreliable_fgetattr(const char *path, struct stat *buf,
@@ -721,8 +721,8 @@ int unreliable_fgetattr(const char *path, struct stat *buf,
     if (ret == -1) {
         return -errno;
     }
-    
-    return 0;    
+
+    return 0;
 }
 
 int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
@@ -759,7 +759,7 @@ int unreliable_ioctl(const char *path, int cmd, void *arg,
     if (ret == -1) {
         return -errno;
     }
-    
+
     return ret;
 }
 #endif /* __OpenBSD__ */
@@ -778,8 +778,8 @@ int unreliable_flock(const char *path, struct fuse_file_info *fi, int op)
     if (ret == -1) {
         return -errno;
     }
-    
-    return 0;    
+
+    return 0;
 }
 #endif /* HAVE_FLOCK */
 
@@ -820,8 +820,8 @@ int unreliable_fallocate(const char *path, int mode,
     if(fi == NULL) {
 	close(fd);
     }
-    
-    return 0;    
+
+    return 0;
 }
 #endif /* HAVE_FALLOCATE */
 
