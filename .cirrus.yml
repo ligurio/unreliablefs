@@ -52,14 +52,14 @@ ubuntu_2004_clang: &ubuntu_2004_clang
   install_script:
     - apt-get install -y cmake libc-dev build-essential fuse libfuse-dev mandoc python3-pytest fio clang-12
 
-freebsd_12_2: &freebsd_12_2
+freebsd_14_0: &freebsd_14_0
   freebsd_instance:
-    image: freebsd-12-2-release-amd64
+    image_family: freebsd-14-0
   env:
     CC: clang
   install_script:
     - ASSUME_ALWAYS_YES=yes pkg bootstrap -f; pkg install -y cmake fusefs-libs pkgconf python3 py39-pip py39-pytest fio
-    - kldload fuse
+    - kldload fusefs
     - kldstat
 
 task:
@@ -72,8 +72,8 @@ task:
       <<: *ubuntu_2004_gcc
     - name: "Build and test on Ubuntu 20.04 with Clang 12"
       <<: *ubuntu_2004_clang
-    - name: "Build and test on FreeBSD 12.2"
-      <<: *freebsd_12_2
+    - name: "Build and test on FreeBSD 14.0"
+      <<: *freebsd_14_0
 
   build_script:
     - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..

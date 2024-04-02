@@ -10,7 +10,7 @@ on:
 
 jobs:
   macos:
-    runs-on: macos-11
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@master
@@ -21,7 +21,7 @@ jobs:
         run: |
           brew update-reset
           brew upgrade
-          brew install --cask osxfuse
+          brew install --cask macfuse
           brew install cmake python3 fio
           sudo python3 -m pip install pytest
 
