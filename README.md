@@ -37,7 +37,7 @@ $ cmake --build build --parallel
 
 ```sh
 $ mkdir /tmp/fs
-$ unreliablefs /tmp/fs -base_dir=/tmp -seed=1618680646
+$ unreliablefs /tmp/fs -basedir=/tmp -seed=1618680646
 $ cat << EOF > /tmp/fs/unreliablefs.conf
 [errinj_noop]
 op_regexp = .*
