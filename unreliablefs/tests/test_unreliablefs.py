@@ -27,6 +27,11 @@ def is_no_xattr_support():
     return sys.platform.startswith("freebsd") or \
             sys.platform == "openbsd"
 
+def is_freebsd():
+    return sys.platform.startswith("freebsd")
+
+no_freebsd_support = is_freebsd()
+
 no_xattr_support = is_no_xattr_support()
 
 TEST_FILE = __file__
@@ -249,6 +254,7 @@ def test_statvfs(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     os.statvfs(mnt_dir)
 
+@pytest.mark.skipif(no_freebsd_support, reason="no freebsd support")
 def test_link(setup_unreliablefs):
     mnt_dir, src_dir = setup_unreliablefs
     name1 = pjoin(mnt_dir, name_generator())
