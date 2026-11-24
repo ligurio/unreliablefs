@@ -147,6 +147,12 @@ int main(int argc, char *argv[])
     char subdir_option[PATH_MAX];
     sprintf(subdir_option, "-omodules=subdir,subdir=%s", conf.basedir);
     fuse_opt_add_arg(&args, subdir_option);
+    /* Let the kernel interrupt operations whose caller got a signal. Without
+     * it, a process waiting for a lock (flock(2), fcntl(2) F_SETLKW) can't
+     * even be killed: it stays in uninterruptible sleep until the lock is
+     * released, which never happens if the process itself holds it on
+     * another file descriptor. */
+    fuse_opt_add_arg(&args, "-ointr");
     /* build config_path */
     char *real_path = realpath(conf.basedir, NULL);
     if (!real_path) {
