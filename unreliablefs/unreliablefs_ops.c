@@ -699,7 +699,9 @@ int unreliable_ftruncate(const char *path, off_t length,
         return ret;
     }
 
-    ret = truncate(path, length);
+    /* truncate the open file, not whatever is at its path now: it may have
+     * been renamed or removed since it was opened */
+    ret = ftruncate((int) fi->fh, length);
     if (ret == -1) {
         return -errno;
     }
