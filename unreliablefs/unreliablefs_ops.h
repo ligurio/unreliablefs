@@ -3,6 +3,8 @@
 
 #define FUSE_USE_VERSION 29
 
+#include <stdint.h>
+
 #include <fuse.h>
 
 int unreliable_getattr(const char *, struct stat *);
@@ -28,8 +30,14 @@ int unreliable_release(const char *, struct fuse_file_info *);
 int unreliable_fsync(const char *, int, struct fuse_file_info *);
 
 #ifdef HAVE_XATTR
+#ifdef __APPLE__
+int unreliable_setxattr(const char *, const char *, const char *, size_t,
+                        int, uint32_t);
+int unreliable_getxattr(const char *, const char *, char *, size_t, uint32_t);
+#else
 int unreliable_setxattr(const char *, const char *, const char *, size_t, int);
 int unreliable_getxattr(const char *, const char *, char *, size_t);
+#endif /* __APPLE__ */
 int unreliable_listxattr(const char *, char *, size_t);
 int unreliable_removexattr(const char *, const char *);
 #endif /* HAVE_XATTR */

@@ -456,8 +456,14 @@ int unreliable_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 }
 
 #ifdef HAVE_XATTR
+#ifdef __APPLE__
+int unreliable_setxattr(const char *path, const char *name,
+                        const char *value, size_t size, int flags,
+                        uint32_t position)
+#else
 int unreliable_setxattr(const char *path, const char *name,
                         const char *value, size_t size, int flags)
+#endif /* __APPLE__ */
 {
     int ret = error_inject(path, OP_SETXATTR);
     if (ret == -ERRNO_NOOP) {
@@ -467,7 +473,7 @@ int unreliable_setxattr(const char *path, const char *name,
     }
 
 #ifdef __APPLE__
-    ret = setxattr(path, name, value, size, 0, flags);
+    ret = setxattr(path, name, value, size, position, flags);
 #else
     ret = setxattr(path, name, value, size, flags);
 #endif /* __APPLE__ */
@@ -478,8 +484,13 @@ int unreliable_setxattr(const char *path, const char *name,
     return 0;
 }
 
+#ifdef __APPLE__
+int unreliable_getxattr(const char *path, const char *name,
+                        char *value, size_t size, uint32_t position)
+#else
 int unreliable_getxattr(const char *path, const char *name,
                         char *value, size_t size)
+#endif /* __APPLE__ */
 {
     int ret = error_inject(path, OP_GETXATTR);
     if (ret == -ERRNO_NOOP) {
@@ -489,7 +500,7 @@ int unreliable_getxattr(const char *path, const char *name,
     }
 
 #ifdef __APPLE__
-    ret = getxattr(path, name, value, size, 0, XATTR_NOFOLLOW);
+    ret = getxattr(path, name, value, size, position, XATTR_NOFOLLOW);
 #else
     ret = getxattr(path, name, value, size);
 #endif /* __APPLE__ */
