@@ -261,8 +261,18 @@ struct err_inj_q *config_init(const char* conf_path) {
     }
     TAILQ_INIT(errors);  /* initialize queue */
     if (access(conf_path, F_OK ) == 0) {
-        if (ini_parse(conf_path, conf_option_handler, errors) < 0) {
+        int rc = ini_parse(conf_path, conf_option_handler, errors);
+        if (rc < 0) {
             fprintf(stderr, "can't load '%s'\n", conf_path);
+            config_delete(errors);
+            return NULL;
+        }
+        if (rc > 0) {
+            /* ini_parse() returns the number of the first line it couldn't
+             * parse, e.g. a line that isn't a section or a name = value pair,
+             * or the rest of a line that is longer than INI_MAX_LINE */
+            fprintf(stderr, "can't load '%s': parse error at line %d\n", conf_path, rc);
+            config_delete(errors);
             return NULL;
         }
     }
