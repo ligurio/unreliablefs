@@ -24,6 +24,7 @@ change log follows the conventions of
 - FreeBSD setup in a Cirrus CI.
 - Disabled tests on FreeBSD.
 - Manual pages paths.
+- `getxattr` returning an empty value for every extended attribute (#50).
 
 ### Changed
 

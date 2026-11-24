@@ -497,7 +497,7 @@ int unreliable_getxattr(const char *path, const char *name,
         return -errno;
     }
 
-    return 0;
+    return ret;
 }
 
 int unreliable_listxattr(const char *path, char *list, size_t size)
