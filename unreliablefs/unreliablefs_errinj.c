@@ -169,6 +169,12 @@ int error_inject(const char* path, fuse_op operation)
      */
     int rc = -0;
     struct errinj_conf *err;
+    /* With "-o hard_remove", operations on an open file that was removed get
+     * no path (NULL), only the file handle. Match the path regexps against an
+     * empty path then, so that ".*" still applies to them. */
+    if (path == NULL) {
+        path = "";
+    }
     /* read configuration file on change */
     pthread_mutex_lock(&conf.mutex);
     if (strcmp(path, conf.config_path) == 0) {
