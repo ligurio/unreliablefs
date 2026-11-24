@@ -10,6 +10,9 @@
 #ifdef HAVE_XATTR
 #include <sys/xattr.h>
 #endif /* HAVE_XATTR */
+#ifdef HAVE_ULOCKMGR
+#include <ulockmgr.h>
+#endif /* HAVE_ULOCKMGR */
 
 #ifdef linux
 /* For pread()/pwrite()/utimensat() */
@@ -735,10 +738,19 @@ int unreliable_lock(const char *path, struct fuse_file_info *fi, int cmd,
         return ret;
     }
 
+#ifdef HAVE_ULOCKMGR
+    /* POSIX locks belong to a process. Taken with fcntl(2) here, they would
+     * all belong to unreliablefs, so the locks of different processes on the
+     * mount would never conflict. The lock manager of libfuse takes each lock
+     * in a process of its own per lock owner (fi->lock_owner). */
+    return ulockmgr_op((int) fi->fh, cmd, fl, &fi->lock_owner,
+                       sizeof(fi->lock_owner));
+#else
     ret = fcntl((int) fi->fh, cmd, fl);
     if (ret == -1) {
         return -errno;
     }
+#endif /* HAVE_ULOCKMGR */
 
     return 0;
 }

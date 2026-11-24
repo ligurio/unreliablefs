@@ -34,6 +34,16 @@ if (${HAVE_XATTR})
     target_compile_definitions(${PROJECT_NAME} PUBLIC HAVE_XATTR)
 endif ()
 
+# libfuse's lock manager (Linux), to keep the POSIX locks of different
+# processes apart, see unreliable_lock()
+include(CheckIncludeFile)
+find_library(ULOCKMGR_LIBRARY ulockmgr)
+check_include_file(ulockmgr.h HAVE_ULOCKMGR_H)
+if (ULOCKMGR_LIBRARY AND HAVE_ULOCKMGR_H)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC HAVE_ULOCKMGR)
+    target_link_libraries(${PROJECT_NAME} ${ULOCKMGR_LIBRARY})
+endif ()
+
 add_subdirectory(tests)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
