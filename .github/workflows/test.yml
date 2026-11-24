@@ -22,11 +22,10 @@ jobs:
           brew update-reset
           brew upgrade
           brew install --cask macfuse
-          brew install cmake python3 fio
-          sudo python3 -m pip install pytest
+          brew install cmake fio
 
       - name: Running CMake
         run: cmake -S . -B build
 
       - name: Building
-        run: cmake --build build --parallel $(nproc)
+        run: cmake --build build --parallel
