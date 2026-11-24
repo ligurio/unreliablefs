@@ -436,10 +436,7 @@ def test_listxattr(setup_unreliablefs, symlink):
     assert num_attrs + 2 == len(os.listxattr(target))
 
 @pytest.mark.skipif(no_xattr_support, reason="no xattr support")
-@pytest.mark.parametrize("symlink",
-    (False,
-     pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
-    ))
+@pytest.mark.parametrize("symlink", (False, True))
 def test_getxattr(setup_unreliablefs, symlink):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
@@ -486,10 +483,7 @@ def test_setxattr(setup_unreliablefs, symlink):
     assert attr_name.decode("utf-8") in os.listxattr(target)
 
 @pytest.mark.skipif(no_xattr_support, reason="no xattr support")
-@pytest.mark.parametrize("symlink",
-    (pytest.param(True, marks=pytest.mark.xfail(reason="gh-50")),
-     pytest.param(False, marks=pytest.mark.xfail(reason="gh-50")),
-    ))
+@pytest.mark.parametrize("symlink", (False, True))
 def test_removexattr(setup_unreliablefs, symlink):
     mnt_dir, src_dir = setup_unreliablefs
     name = name_generator()
